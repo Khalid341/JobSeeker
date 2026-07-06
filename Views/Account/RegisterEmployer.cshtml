@@ -1,0 +1,100 @@
+@model RegisterEmployerViewModel
+@{
+    ViewData["Title"] = "تسجيل صاحب عمل";
+}
+
+<div class="row justify-content-center mt-5">
+    <div class="col-md-8 col-lg-7">
+        <div class="card shadow-lg border-0">
+            <div class="card-header auth-header text-white text-center py-4">
+                <div class="mb-3">
+                    <i class="bi bi-building-fill" style="font-size: 4rem; opacity: 0.9;"></i>
+                </div>
+                <h3 class="mb-0 fw-bold">انضم كصاحب عمل</h3>
+                <p class="mb-0 mt-2" style="opacity: 0.9;">اكتشف المواهب المتميزة لشركتك</p>
+            </div>
+            <div class="card-body p-5">
+                <form asp-controller="Account" asp-action="RegisterEmployer" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-4"></div>
+
+                    <div class="mb-4">
+                        <label asp-for="FullName" class="form-label">
+                            <i class="bi bi-person me-2"></i>الاسم الكامل
+                        </label>
+                        <input asp-for="FullName" class="form-control form-control-lg" placeholder="أدخل اسمك الكامل" />
+                        <span asp-validation-for="FullName" class="text-danger small"></span>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <label asp-for="Email" class="form-label">
+                                <i class="bi bi-envelope me-2"></i>البريد الإلكتروني
+                            </label>
+                            <input asp-for="Email" class="form-control" placeholder="example@company.com" />
+                            <span asp-validation-for="Email" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <label asp-for="CompanyName" class="form-label">
+                                <i class="bi bi-building me-2"></i>اسم الشركة
+                            </label>
+                            <input asp-for="CompanyName" class="form-control" placeholder="اسم شركتك" />
+                            <span asp-validation-for="CompanyName" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <label asp-for="Password" class="form-label">
+                                <i class="bi bi-lock me-2"></i>كلمة المرور
+                            </label>
+                            <input asp-for="Password" class="form-control" placeholder="********" />
+                            <span asp-validation-for="Password" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <label asp-for="ConfirmPassword" class="form-label">
+                                <i class="bi bi-lock-fill me-2"></i>تأكيد كلمة المرور
+                            </label>
+                            <input asp-for="ConfirmPassword" class="form-control" placeholder="********" />
+                            <span asp-validation-for="ConfirmPassword" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <label asp-for="Industry" class="form-label">
+                                <i class="bi bi-briefcase me-2"></i>المجال
+                            </label>
+                            <input asp-for="Industry" class="form-control" placeholder="مثال: تكنولوجيا المعلومات" />
+                            <span asp-validation-for="Industry" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <label asp-for="City" class="form-label">
+                                <i class="bi bi-geo-alt me-2"></i>المدينة
+                            </label>
+                            <input asp-for="City" class="form-control" placeholder="مدينة الشركة" />
+                            <span asp-validation-for="City" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label asp-for="Website" class="form-label">
+                            <i class="bi bi-globe me-2"></i>الموقع الإلكتروني
+                        </label>
+                        <input asp-for="Website" class="form-control" placeholder="https://example.com" />
+                        <span asp-validation-for="Website" class="text-danger small"></span>
+                    </div>
+
+                    <div class="d-grid mb-4">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="bi bi-building-add me-2"></i>إنشاء حساب الشركة
+                        </button>
+                    </div>
+                </form>
+
+                <div class="text-center">
+                    <p class="text-muted mb-0">لديك حساب بالفعل؟ <a asp-action="Login" class="fw-bold">تسجيل الدخول</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,169 @@
+@model EmployerDashboardViewModel
+@{
+    ViewData["Title"] = "لوحة تحكم صاحب العمل";
+    Layout = "_EmployerLayout";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-5">
+    <h2 class="mb-0">
+        <i class="bi bi-speedometer2 me-2 text-primary"></i>لوحة التحكم
+    </h2>
+    <span class="text-muted">مرحباً بك في لوحة التحكم</span>
+</div>
+
+<!-- Stats Cards -->
+<div class="row g-4 mb-5">
+    <div class="col-md-4">
+        <div class="card dashboard-card bg-primary text-white border-0 h-100">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <h6 class="card-title">إجمالي المرشحين</h6>
+                        <h3 class="mb-0 mt-3">@Model.TotalCandidates</h3>
+                    </div>
+                    <i class="bi bi-people-fill"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card dashboard-card bg-success text-white border-0 h-100">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <h6 class="card-title">المرشحين المتاحين</h6>
+                        <h3 class="mb-0 mt-3">@Model.AvailableCandidatesCount</h3>
+                    </div>
+                    <i class="bi bi-person-check-fill"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card dashboard-card bg-warning text-white border-0 h-100">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <h6 class="card-title">الملفات المشاهدة</h6>
+                        <h3 class="mb-0 mt-3">@Model.ProfilesViewedCount</h3>
+                    </div>
+                    <i class="bi bi-eye-fill"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Search -->
+<div class="card shadow border-0 mb-5">
+    <div class="card-header bg-white border-bottom py-4">
+        <h5 class="mb-0 text-dark">
+            <i class="bi bi-search me-2 text-primary"></i>بحث سريع عن مرشحين
+        </h5>
+    </div>
+    <div class="card-body p-4">
+        <form asp-action="SearchCandidates" method="get">
+            <div class="row g-4 align-items-end">
+                <div class="col-md-4">
+                    <label class="form-label">
+                        <i class="bi bi-briefcase me-2"></i>التخصص
+                    </label>
+                    <select name="Specialty" class="form-select" asp-items="JobSeeker.Constants.SpecialtiesList.AsSelectListItems()">
+                        <option value="">كل التخصصات</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">
+                        <i class="bi bi-geo-alt me-2"></i>المدينة
+                    </label>
+                    <input type="text" name="City" class="form-control" placeholder="المدينة" />
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">
+                        <i class="bi bi-stars me-2"></i>المهارات
+                    </label>
+                    <input type="text" name="Skills" class="form-control" placeholder="مثال: C#, SQL" />
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary w-100 btn-lg">
+                        <i class="bi bi-search"></i>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Recent Candidates -->
+<div class="card shadow border-0">
+    <div class="card-header bg-white border-bottom d-flex justify-content-between align-items-center py-4">
+        <h5 class="mb-0 text-dark">
+            <i class="bi bi-people-fill me-2 text-primary"></i>مرشحون متاحون حديثاً
+        </h5>
+        <a asp-action="SearchCandidates" class="btn btn-outline-primary">
+            عرض الكل <i class="bi bi-arrow-left ms-2"></i>
+        </a>
+    </div>
+    <div class="card-body p-4">
+        @if (Model.RecentCandidates.Any())
+        {
+            <div class="row g-4">
+                @foreach (var candidate in Model.RecentCandidates)
+                {
+                    <div class="col-md-6 col-lg-4">
+                        <div class="card candidate-card h-100 border-0">
+                            <div class="card-body p-4">
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <div>
+                                        <h5 class="card-title mb-2 fw-bold">@candidate.FullName</h5>
+                                        <p class="text-primary mb-0 fw-semibold">@(candidate.JobTitle ?? "-")</p>
+                                    </div>
+                                    @if (candidate.IsAvailable)
+                                    {
+                                        <span class="badge bg-success">
+                                            <i class="bi bi-check-circle me-1"></i>متاح
+                                        </span>
+                                    }
+                                </div>
+                                <p class="text-muted mb-2">
+                                    <i class="bi bi-briefcase-fill me-2 text-primary"></i>@(candidate.Specialty ?? "غير محدد")
+                                </p>
+                                <p class="text-muted mb-3">
+                                    <i class="bi bi-geo-alt-fill me-2 text-primary"></i>@(candidate.City ?? "غير محدد")
+                                </p>
+                                @if (!string.IsNullOrEmpty(candidate.Skills))
+                                {
+                                    <div class="mb-3">
+                                        @foreach (var skill in candidate.Skills.Split(',', StringSplitOptions.RemoveEmptyEntries).Take(3))
+                                        {
+                                            <span class="badge bg-light text-dark border me-1 mb-1">@skill.Trim()</span>
+                                        }
+                                    </div>
+                                }
+                                <div class="d-flex justify-content-between align-items-center pt-3 border-top">
+                                    <small class="text-muted">
+                                        <i class="bi bi-eye-fill me-1"></i>@candidate.ViewsCount مشاهدة
+                                    </small>
+                                    <small class="text-muted">@candidate.UpdatedAt.ToString("yyyy-MM-dd")</small>
+                                </div>
+                            </div>
+                            <div class="card-footer bg-white border-top-0 pt-0 pb-4 px-4">
+                                <a asp-action="CandidateDetails" asp-route-id="@candidate.Id" class="btn btn-primary w-100">
+                                    <i class="bi bi-person-lines-fill me-2"></i>عرض الملف
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="empty-state">
+                <img src="~/images/empty-state.svg" alt="No candidates" class="img-fluid mb-4" style="max-width: 250px;">
+                <h4 class="text-dark mb-3">لا يوجد مرشحين متاحين</h4>
+                <p class="text-muted">ابدأ بالبحث عن مرشحين باستخدام الفلاتر أعلاه</p>
+            </div>
+        }
+    </div>
+</div>

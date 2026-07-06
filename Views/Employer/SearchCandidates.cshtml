@@ -1,0 +1,135 @@
+@model CandidateSearchViewModel
+@using JobSeeker.Constants
+@{
+    ViewData["Title"] = "البحث عن المرشحين";
+    Layout = "_EmployerLayout";
+    var candidates = ViewBag.Candidates as List<CandidateResultViewModel> ?? new List<CandidateResultViewModel>();
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="mb-0">
+        <i class="bi bi-search me-2 text-primary"></i>البحث عن المرشحين
+    </h2>
+    <span class="badge bg-primary fs-5 px-4 py-2">@candidates.Count مرشح</span>
+</div>
+
+<!-- Search Filter Card -->
+<div class="card shadow border-0 mb-5">
+    <div class="card-header bg-white border-bottom py-4">
+        <h5 class="mb-0 text-dark">
+            <i class="bi bi-funnel-fill me-2 text-primary"></i>تصفية البحث
+        </h5>
+    </div>
+    <div class="card-body p-4">
+        <form asp-action="SearchCandidates" method="get">
+            <div class="row g-4 align-items-end">
+                <div class="col-md-3">
+                    <label asp-for="Specialty" class="form-label">
+                        <i class="bi bi-briefcase me-2"></i>التخصص
+                    </label>
+                    <select asp-for="Specialty" class="form-select" asp-items="SpecialtiesList.AsSelectListItems(Model.Specialty)">
+                        <option value="">كل التخصصات</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label asp-for="City" class="form-label">
+                        <i class="bi bi-geo-alt me-2"></i>المدينة
+                    </label>
+                    <input asp-for="City" class="form-control" placeholder="المدينة" />
+                </div>
+                <div class="col-md-3">
+                    <label asp-for="Skills" class="form-label">
+                        <i class="bi bi-stars me-2"></i>المهارات
+                    </label>
+                    <input asp-for="Skills" class="form-control" placeholder="المهارات" />
+                </div>
+                <div class="col-md-3">
+                    <label asp-for="SortOrder" class="form-label">
+                        <i class="bi bi-sort-down me-2"></i>الترتيب
+                    </label>
+                    <select asp-for="SortOrder" class="form-select" asp-items="Html.GetEnumSelectList<CandidateSortOrder>()"></select>
+                </div>
+            </div>
+            <div class="row g-4 align-items-center mt-4">
+                <div class="col-md-6">
+                    <div class="form-check form-switch">
+                        <input asp-for="IsAvailableOnly" class="form-check-input" />
+                        <label asp-for="IsAvailableOnly" class="form-check-label fw-semibold">
+                            <i class="bi bi-check-circle me-2"></i>المتاحين فقط
+                        </label>
+                    </div>
+                </div>
+                <div class="col-md-6 text-end">
+                    <button type="submit" class="btn btn-primary btn-lg px-5">
+                        <i class="bi bi-search me-2"></i>بحث
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Results -->
+<div class="row g-4">
+    @foreach (var candidate in candidates)
+    {
+        <div class="col-md-6 col-lg-4">
+            <div class="card candidate-card h-100 border-0">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div>
+                            <h5 class="card-title mb-2 fw-bold">@candidate.FullName</h5>
+                            <p class="text-primary mb-0 fw-semibold">@(candidate.JobTitle ?? "-")</p>
+                        </div>
+                        @if (candidate.IsAvailable)
+                        {
+                            <span class="badge bg-success">
+                                <i class="bi bi-check-circle me-1"></i>متاح
+                            </span>
+                        }
+                    </div>
+
+                    <div class="mb-3">
+                        <p class="text-muted mb-2">
+                            <i class="bi bi-briefcase-fill me-2 text-primary"></i>@(candidate.Specialty ?? "غير محدد")
+                        </p>
+                        <p class="text-muted mb-0">
+                            <i class="bi bi-geo-alt-fill me-2 text-primary"></i>@(candidate.City ?? "غير محدد")
+                        </p>
+                    </div>
+
+                    @if (!string.IsNullOrEmpty(candidate.Skills))
+                    {
+                        <div class="mb-3">
+                            @foreach (var skill in candidate.Skills.Split(',', StringSplitOptions.RemoveEmptyEntries).Take(4))
+                            {
+                                <span class="badge bg-light text-dark border me-1 mb-1">@skill.Trim()</span>
+                            }
+                        </div>
+                    }
+
+                    <div class="d-flex justify-content-between align-items-center pt-3 border-top">
+                        <small class="text-muted">
+                            <i class="bi bi-eye-fill me-1"></i>@candidate.ViewsCount مشاهدة
+                        </small>
+                        <small class="text-muted">@candidate.UpdatedAt.ToString("yyyy-MM-dd")</small>
+                    </div>
+                </div>
+                <div class="card-footer bg-white border-top-0 pt-0 pb-4 px-4">
+                    <a asp-action="CandidateDetails" asp-route-id="@candidate.Id" class="btn btn-primary w-100">
+                        <i class="bi bi-person-lines-fill me-2"></i>عرض الملف الشخصي
+                    </a>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@if (!candidates.Any())
+{
+    <div class="empty-state py-5">
+        <img src="~/images/empty-state.svg" alt="No results" class="img-fluid mb-4" style="max-width: 250px;">
+        <h4 class="text-dark mb-3">لا يوجد مرشحين مطابقين</h4>
+        <p class="text-muted">جرّب تغيير معايير البحث أو إزالة بعض الفلاتر</p>
+    </div>
+}

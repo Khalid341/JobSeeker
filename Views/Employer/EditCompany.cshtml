@@ -1,0 +1,104 @@
+@model EditCompanyViewModel
+@{
+    ViewData["Title"] = "تعديل بيانات الشركة";
+    Layout = "_EmployerLayout";
+}
+
+<div class="card shadow-lg border-0">
+    <div class="card-header bg-white border-bottom py-4">
+        <h4 class="mb-0">
+            <i class="bi bi-pencil-square-fill me-2 text-primary"></i>تعديل بيانات الشركة
+        </h4>
+    </div>
+    <div class="card-body p-5">
+        <form asp-action="EditCompany" method="post" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-4"></div>
+            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="ExistingLogoFileName" />
+
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <label asp-for="CompanyName" class="form-label">
+                        <i class="bi bi-building me-2"></i>اسم الشركة
+                    </label>
+                    <input asp-for="CompanyName" class="form-control form-control-lg" placeholder="اسم شركتك" />
+                    <span asp-validation-for="CompanyName" class="text-danger small"></span>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <label asp-for="Industry" class="form-label">
+                        <i class="bi bi-briefcase me-2"></i>المجال
+                    </label>
+                    <input asp-for="Industry" class="form-control form-control-lg" placeholder="مثال: تكنولوجيا المعلومات" />
+                    <span asp-validation-for="Industry" class="text-danger small"></span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <label asp-for="CompanySize" class="form-label">
+                        <i class="bi bi-people me-2"></i>حجم الشركة
+                    </label>
+                    <select asp-for="CompanySize" class="form-select form-select-lg">
+                        <option value="">اختر حجم الشركة</option>
+                        <option value="1-10">1 - 10 موظفين</option>
+                        <option value="11-50">11 - 50 موظف</option>
+                        <option value="51-200">51 - 200 موظف</option>
+                        <option value="201-500">201 - 500 موظف</option>
+                        <option value="500+">أكثر من 500 موظف</option>
+                    </select>
+                    <span asp-validation-for="CompanySize" class="text-danger small"></span>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <label asp-for="City" class="form-label">
+                        <i class="bi bi-geo-alt me-2"></i>المدينة
+                    </label>
+                    <input asp-for="City" class="form-control form-control-lg" placeholder="مدينة الشركة" />
+                    <span asp-validation-for="City" class="text-danger small"></span>
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <label asp-for="Website" class="form-label">
+                    <i class="bi bi-globe me-2"></i>الموقع الإلكتروني
+                </label>
+                <input asp-for="Website" class="form-control form-control-lg" placeholder="https://example.com" />
+                <span asp-validation-for="Website" class="text-danger small"></span>
+            </div>
+
+            <div class="mb-4">
+                <label asp-for="Description" class="form-label">
+                    <i class="bi bi-info-circle me-2"></i>وصف الشركة
+                </label>
+                <textarea asp-for="Description" class="form-control" rows="6" placeholder="اكتب وصفاً لشركتك..."></textarea>
+                <span asp-validation-for="Description" class="text-danger small"></span>
+            </div>
+
+            <div class="mb-4">
+                <label asp-for="LogoFile" class="form-label">
+                    <i class="bi bi-image me-2"></i>شعار الشركة
+                </label>
+                <input asp-for="LogoFile" type="file" class="form-control form-control-lg" accept=".jpg,.jpeg,.png,.gif" />
+                <span asp-validation-for="LogoFile" class="text-danger small"></span>
+                <small class="form-text text-muted mt-2">
+                    <i class="bi bi-info-circle me-1"></i>الصيغ المقبولة: JPG, PNG, GIF
+                </small>
+                @if (!string.IsNullOrEmpty(Model.ExistingLogoFileName))
+                {
+                    <div class="mt-3 p-3 rounded" style="background: linear-gradient(135deg, rgba(245, 247, 250, 0.8) 0%, rgba(226, 232, 240, 0.8) 100%);">
+                        <small class="fw-bold text-dark d-block mb-2">الشعار الحالي:</small>
+                        <img src="~/uploads/logos/@Model.ExistingLogoFileName" alt="Logo" class="company-logo" />
+                    </div>
+                }
+            </div>
+
+            <div class="d-flex gap-3 mt-4">
+                <button type="submit" class="btn btn-primary btn-lg">
+                    <i class="bi bi-check-circle me-2"></i>حفظ التغييرات
+                </button>
+                <a asp-action="Profile" class="btn btn-outline-secondary btn-lg">
+                    <i class="bi bi-x-circle me-2"></i>إلغاء
+                </a>
+            </div>
+        </form>
+    </div>
+</div>

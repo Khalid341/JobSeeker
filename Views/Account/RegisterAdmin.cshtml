@@ -1,0 +1,64 @@
+@model RegisterAdminViewModel
+@{
+    ViewData["Title"] = "إضافة مدير";
+    Layout = "_AdminLayout";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+        <div class="card shadow-lg border-0">
+            <div class="card-header auth-header text-white text-center py-4">
+                <div class="mb-3">
+                    <i class="bi bi-shield-lock-fill" style="font-size: 4rem; opacity: 0.9;"></i>
+                </div>
+                <h3 class="mb-0 fw-bold">إضافة مدير جديد</h3>
+                <p class="mb-0 mt-2" style="opacity: 0.9;">أضف مديراً جديداً للنظام</p>
+            </div>
+            <div class="card-body p-5">
+                <form asp-controller="Account" asp-action="RegisterAdmin" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-4"></div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <label asp-for="FullName" class="form-label">
+                                <i class="bi bi-person me-2"></i>الاسم الكامل
+                            </label>
+                            <input asp-for="FullName" class="form-control form-control-lg" placeholder="أدخل الاسم الكامل" />
+                            <span asp-validation-for="FullName" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <label asp-for="Email" class="form-label">
+                                <i class="bi bi-envelope me-2"></i>البريد الإلكتروني
+                            </label>
+                            <input asp-for="Email" class="form-control form-control-lg" placeholder="admin@example.com" />
+                            <span asp-validation-for="Email" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <label asp-for="Password" class="form-label">
+                                <i class="bi bi-lock me-2"></i>كلمة المرور
+                            </label>
+                            <input asp-for="Password" class="form-control form-control-lg" placeholder="********" />
+                            <span asp-validation-for="Password" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <label asp-for="ConfirmPassword" class="form-label">
+                                <i class="bi bi-lock-fill me-2"></i>تأكيد كلمة المرور
+                            </label>
+                            <input asp-for="ConfirmPassword" class="form-control form-control-lg" placeholder="********" />
+                            <span asp-validation-for="ConfirmPassword" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                    <div class="d-grid mt-4">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="bi bi-person-plus-fill me-2"></i>إضافة المدير
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

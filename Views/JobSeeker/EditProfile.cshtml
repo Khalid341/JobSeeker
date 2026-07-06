@@ -1,0 +1,104 @@
+@model EditProfileViewModel
+@using JobSeeker.Constants
+@{
+    ViewData["Title"] = "تعديل الملف الشخصي";
+    Layout = "_JobSeekerLayout";
+}
+
+<div class="card shadow-lg border-0">
+    <div class="card-header bg-white border-bottom py-4">
+        <h4 class="mb-0">
+            <i class="bi bi-pencil-square-fill me-2 text-primary"></i>تعديل الملف الشخصي
+        </h4>
+    </div>
+    <div class="card-body p-5">
+        <form asp-action="EditProfile" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-4"></div>
+
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <label asp-for="Specialty" class="form-label">
+                        <i class="bi bi-briefcase me-2"></i>التخصص
+                    </label>
+                    <select asp-for="Specialty" class="form-select form-select-lg" asp-items="SpecialtiesList.AsSelectListItems(Model.Specialty)">
+                        <option value="">اختر التخصص</option>
+                    </select>
+                    <span asp-validation-for="Specialty" class="text-danger small"></span>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <label asp-for="JobTitle" class="form-label">
+                        <i class="bi bi-person-badge me-2"></i>المسمى الوظيفي
+                    </label>
+                    <input asp-for="JobTitle" class="form-control form-control-lg" placeholder="مثال: مطور Full Stack" />
+                    <span asp-validation-for="JobTitle" class="text-danger small"></span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <label asp-for="City" class="form-label">
+                        <i class="bi bi-geo-alt me-2"></i>المدينة
+                    </label>
+                    <input asp-for="City" class="form-control form-control-lg" placeholder="أدخل مدينتك" />
+                    <span asp-validation-for="City" class="text-danger small"></span>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <label asp-for="PhoneNumber" class="form-label">
+                        <i class="bi bi-telephone me-2"></i>رقم الهاتف
+                    </label>
+                    <input asp-for="PhoneNumber" class="form-control form-control-lg" placeholder="05xxxxxxxx" />
+                    <span asp-validation-for="PhoneNumber" class="text-danger small"></span>
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <label asp-for="Bio" class="form-label">
+                    <i class="bi bi-person-fill me-2"></i>نبذة شخصية
+                </label>
+                <textarea asp-for="Bio" class="form-control" rows="5" placeholder="اكتب نبذة عن نفسك..."></textarea>
+                <span asp-validation-for="Bio" class="text-danger small"></span>
+            </div>
+
+            <div class="mb-4">
+                <label asp-for="Skills" class="form-label">
+                    <i class="bi bi-stars me-2"></i>المهارات
+                </label>
+                <textarea asp-for="Skills" class="form-control" rows="4" placeholder="افصل بين المهارات بفاصلة , مثال: C#, SQL, JavaScript"></textarea>
+                <span asp-validation-for="Skills" class="text-danger small"></span>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <label asp-for="LinkedInUrl" class="form-label">
+                        <i class="bi bi-linkedin me-2"></i>رابط LinkedIn
+                    </label>
+                    <input asp-for="LinkedInUrl" class="form-control" placeholder="https://linkedin.com/in/username" />
+                    <span asp-validation-for="LinkedInUrl" class="text-danger small"></span>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <label asp-for="GitHubUrl" class="form-label">
+                        <i class="bi bi-github me-2"></i>رابط GitHub
+                    </label>
+                    <input asp-for="GitHubUrl" class="form-control" placeholder="https://github.com/username" />
+                    <span asp-validation-for="GitHubUrl" class="text-danger small"></span>
+                </div>
+            </div>
+
+            <div class="mb-4 form-check form-switch">
+                <input asp-for="IsAvailable" class="form-check-input" />
+                <label asp-for="IsAvailable" class="form-check-label fw-semibold">
+                    <i class="bi bi-check-circle me-2"></i>متاح للعمل
+                </label>
+            </div>
+
+            <div class="d-flex gap-3 mt-4">
+                <button type="submit" class="btn btn-primary btn-lg">
+                    <i class="bi bi-check-circle me-2"></i>حفظ التغييرات
+                </button>
+                <a asp-action="Profile" class="btn btn-outline-secondary btn-lg">
+                    <i class="bi bi-x-circle me-2"></i>إلغاء
+                </a>
+            </div>
+        </form>
+    </div>
+</div>

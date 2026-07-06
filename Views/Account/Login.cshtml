@@ -1,0 +1,62 @@
+@model LoginViewModel
+@{
+    ViewData["Title"] = "تسجيل الدخول";
+}
+
+<div class="row justify-content-center mt-5">
+    <div class="col-md-6 col-lg-5">
+        <div class="card shadow-lg border-0">
+            <div class="card-header auth-header text-white text-center py-4">
+                <div class="mb-3">
+                    <i class="bi bi-person-circle" style="font-size: 4rem; opacity: 0.9;"></i>
+                </div>
+                <h3 class="mb-0 fw-bold">مرحباً بعودتك</h3>
+                <p class="mb-0 mt-2" style="opacity: 0.9;">سجّل دخولك للمتابعة</p>
+            </div>
+            <div class="card-body p-5">
+                <form asp-controller="Account" asp-action="Login" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-4"></div>
+
+                    <div class="mb-4">
+                        <label asp-for="Email" class="form-label">
+                            <i class="bi bi-envelope me-2"></i>البريد الإلكتروني
+                        </label>
+                        <input asp-for="Email" class="form-control form-control-lg" placeholder="example@email.com" />
+                        <span asp-validation-for="Email" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-4">
+                        <label asp-for="Password" class="form-label">
+                            <i class="bi bi-lock me-2"></i>كلمة المرور
+                        </label>
+                        <input asp-for="Password" class="form-control form-control-lg" placeholder="********" />
+                        <span asp-validation-for="Password" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-4 form-check">
+                        <input asp-for="RememberMe" class="form-check-input" />
+                        <label asp-for="RememberMe" class="form-check-label">تذكرني</label>
+                    </div>
+
+                    <div class="d-grid mb-4">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="bi bi-box-arrow-in-right me-2"></i>تسجيل الدخول
+                        </button>
+                    </div>
+                </form>
+
+                <div class="text-center">
+                    <p class="text-muted mb-3">ليس لديك حساب؟</p>
+                    <div class="d-flex gap-2 justify-content-center flex-wrap">
+                        <a asp-action="RegisterJobSeeker" class="btn btn-register-jobseeker">
+                            <i class="bi bi-person-plus me-2"></i>إنشاء حساب باحث
+                        </a>
+                        <a asp-action="RegisterEmployer" class="btn btn-register-employer">
+                            <i class="bi bi-building me-2"></i>إنشاء حساب شركة
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

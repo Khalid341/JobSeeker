@@ -1,0 +1,85 @@
+@model List<JobSeekerListViewModel>
+@{
+    ViewData["Title"] = "إدارة الباحثين";
+    Layout = "_AdminLayout";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-5">
+    <h3 class="mb-0">
+        <i class="bi bi-person-badge-fill me-2 text-primary"></i>إدارة الباحثين عن عمل
+    </h3>
+    <span class="badge bg-primary fs-5 px-4 py-2">@Model.Count باحث</span>
+</div>
+
+<div class="card shadow border-0">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th>الاسم</th>
+                        <th>البريد الإلكتروني</th>
+                        <th>التخصص</th>
+                        <th>العنوان الوظيفي</th>
+                        <th>المدينة</th>
+                        <th>السيرة الذاتية</th>
+                        <th>المشاهدات</th>
+                        <th>الحالة</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var seeker in Model)
+                    {
+                        <tr>
+                            <td class="fw-bold">@seeker.FullName</td>
+                            <td class="text-break">@seeker.Email</td>
+                            <td>@(seeker.Specialty ?? "-")</td>
+                            <td>@(seeker.JobTitle ?? "-")</td>
+                            <td>@(seeker.City ?? "-")</td>
+                            <td>
+                                @if (seeker.HasResume)
+                                {
+                                    <span class="badge bg-success">
+                                        <i class="bi bi-check-circle me-1"></i>موجودة
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary">
+                                        <i class="bi bi-x-circle me-1"></i>غير موجودة
+                                    </span>
+                                }
+                            </td>
+                            <td>
+                                <span class="badge bg-info">@seeker.ViewsCount</span>
+                            </td>
+                            <td>
+                                @if (seeker.IsActive)
+                                {
+                                    <span class="badge bg-success">
+                                        <i class="bi bi-check-circle me-1"></i>نشط
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary">
+                                        <i class="bi bi-x-circle me-1"></i>معطل
+                                    </span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@if (!Model.Any())
+{
+    <div class="empty-state py-5">
+        <img src="~/images/empty-state.svg" alt="No job seekers" class="img-fluid mb-4" style="max-width: 250px;">
+        <h4 class="text-dark mb-3">لا يوجد باحثين عن عمل مسجلين</h4>
+        <p class="text-muted">سيظهر هنا الباحثين عن عمل عند التسجيل</p>
+    </div>
+}

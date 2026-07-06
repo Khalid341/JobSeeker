@@ -1,0 +1,105 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <defs>
+    <!-- Professional teal to dark blue gradient -->
+    <linearGradient id="mainGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#14b8a6;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#0e7490;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#0c4a6e;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="accentGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#14b8a6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#0891b2;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="lightGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#14b8a6;stop-opacity:0.8" />
+      <stop offset="100%" style="stop-color:#0e7490;stop-opacity:0.8" />
+    </linearGradient>
+    
+    <!-- Soft shadow -->
+    <filter id="softShadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="2"/>
+      <feOffset dx="0" dy="1" result="offsetblur"/>
+      <feComponentTransfer>
+        <feFuncA type="linear" slope="0.15"/>
+      </feComponentTransfer>
+      <feMerge>
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- White background (transparent for flexibility) -->
+  
+  <!-- Abstract modern Arabic calligraphy forming two connected people -->
+  <g transform="translate(100, 100)" filter="url(#softShadow)">
+    
+    <!-- Left person - abstract flowing form -->
+    <g transform="translate(-30, 0)">
+      <!-- Head - perfect circle -->
+      <circle cx="0" cy="-35" r="12" fill="url(#mainGradient)"/>
+      <!-- Body - elegant curve flowing down -->
+      <path d="M 0 -23 Q -8 -15 -10 -5 Q -12 5 -8 15 Q -4 22 0 25" 
+            stroke="url(#mainGradient)" 
+            stroke-width="5" 
+            fill="none" 
+            stroke-linecap="round"/>
+      <!-- Arm reaching out -->
+      <path d="M -3 -10 Q 8 -5 18 0" 
+            stroke="url(#accentGradient)" 
+            stroke-width="4" 
+            fill="none" 
+            stroke-linecap="round"/>
+    </g>
+    
+    <!-- Right person - abstract flowing form -->
+    <g transform="translate(30, 0)">
+      <!-- Head -->
+      <circle cx="0" cy="-35" r="12" fill="url(#mainGradient)"/>
+      <!-- Body -->
+      <path d="M 0 -23 Q 8 -15 10 -5 Q 12 5 8 15 Q 4 22 0 25" 
+            stroke="url(#mainGradient)" 
+            stroke-width="5" 
+            fill="none" 
+            stroke-linecap="round"/>
+      <!-- Arm reaching out -->
+      <path d="M 3 -10 Q -8 -5 -18 0" 
+            stroke="url(#accentGradient)" 
+            stroke-width="4" 
+            fill="none" 
+            stroke-linecap="round"/>
+    </g>
+    
+    <!-- Connection point - where hands meet (handshake/connection) -->
+    <g transform="translate(0, 0)">
+      <!-- Glowing connection circle -->
+      <circle cx="0" cy="0" r="8" fill="url(#accentGradient)"/>
+      <circle cx="0" cy="0" r="4" fill="#ffffff"/>
+      <circle cx="0" cy="0" r="2" fill="url(#mainGradient)"/>
+    </g>
+    
+    <!-- Dynamic forward arrow forming from the connection -->
+    <g transform="translate(0, 20)">
+      <!-- Arrow flowing forward and up -->
+      <path d="M -15 5 Q -5 -5 5 -8 Q 15 -10 20 -15" 
+            stroke="url(#lightGradient)" 
+            stroke-width="3" 
+            fill="none" 
+            stroke-linecap="round"
+            opacity="0.7"/>
+      <!-- Arrow head -->
+      <path d="M 15 -12 L 22 -16 L 20 -22" 
+            stroke="url(#accentGradient)" 
+            stroke-width="3" 
+            fill="none" 
+            stroke-linecap="round"
+            stroke-linejoin="round"/>
+    </g>
+    
+    <!-- Subtle decorative elements -->
+    <circle cx="-50" cy="-30" r="2" fill="url(#accentGradient)" opacity="0.6"/>
+    <circle cx="50" cy="-30" r="2" fill="url(#accentGradient)" opacity="0.6"/>
+    <circle cx="-40" cy="25" r="1.5" fill="url(#accentGradient)" opacity="0.4"/>
+    <circle cx="40" cy="25" r="1.5" fill="url(#accentGradient)" opacity="0.4"/>
+  </g>
+</svg>

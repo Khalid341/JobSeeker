@@ -1,0 +1,130 @@
+﻿@{
+    ViewData["Title"] = "الرئيسية";
+    var stats = ViewBag.Stats;
+}
+
+<!-- Hero Section -->
+<section class="hero-section text-center mb-5">
+    <div class="container position-relative">
+        <div class="row align-items-center">
+            <div class="col-lg-6 text-lg-end">
+                <h1 class="fw-bold mb-4">اكتشف المواهب المتميزة</h1>
+                <p class="lead mb-5">منصة احترافية تربط بين أصحاب العمل والباحثين عن عمل بكل سهولة وفعالية</p>
+                <div class="d-flex justify-content-lg-end justify-content-center gap-3 flex-wrap">
+                    <a asp-controller="Account" asp-action="RegisterEmployer" class="btn btn-light btn-lg fw-bold">
+                        <i class="bi bi-building me-2"></i>أنا صاحب عمل
+                    </a>
+                    <a asp-controller="Account" asp-action="RegisterJobSeeker" class="btn btn-outline-light btn-lg fw-bold">
+                        <i class="bi bi-person me-2"></i>أنا باحث عن عمل
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-6 mt-5 mt-lg-0">
+                
+        </div>
+    </div>
+</section>
+
+<!-- Stats Section -->
+<section class="mb-5">
+    <div class="row g-4 text-center">
+        <div class="col-6 col-md-3">
+            <div class="card stats-card h-100">
+                <div class="card-body">
+                    <i class="bi bi-building-fill text-success mb-3"></i>
+                    <h3 class="fw-bold text-dark">@stats.EmployersCount</h3>
+                    <p class="text-muted mb-0">شركة مشاركة</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="card stats-card h-100">
+                <div class="card-body">
+                    <i class="bi bi-people-fill text-info mb-3"></i>
+                    <h3 class="fw-bold text-dark">@stats.JobSeekersCount</h3>
+                    <p class="text-muted mb-0">باحث عن عمل</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="card stats-card h-100">
+                <div class="card-body">
+                    <i class="bi bi-file-earmark-pdf-fill text-danger mb-3"></i>
+                    <h3 class="fw-bold text-dark">@stats.ResumesCount</h3>
+                    <p class="text-muted mb-0">سيرة ذاتية</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="card stats-card h-100">
+                <div class="card-body">
+                    <i class="bi bi-eye-fill text-warning mb-3"></i>
+                    <h3 class="fw-bold text-dark">@stats.ProfileViewsCount</h3>
+                    <p class="text-muted mb-0">مشاهدة ملف</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="mb-5">
+    <div class="text-center mb-5">
+        <h2 class="fw-bold mb-3">كيف تعمل المنصة؟</h2>
+        <p class="text-muted" style="font-size: 1.2rem;">خطوات بسيطة تربطك بالفرصة المناسبة</p>
+    </div>
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card h-100 border-0 text-center p-4">
+                <div class="card-body">
+                    <div class="rounded-circle d-inline-flex align-items-center justify-content-center mb-4" 
+                         style="width: 100px; height: 100px; background: linear-gradient(135deg, rgba(252, 163, 17, 0.1) 0%, rgba(224, 140, 10, 0.15) 100%);">
+                        <i class="bi bi-person-plus-fill" style="font-size: 3rem; color: var(--orange);"></i>
+                    </div>
+                    <h4 class="fw-bold text-dark mb-3">أنشئ ملفك</h4>
+                    <p class="text-muted mb-0" style="line-height: 1.8;">سجّل كباحث عن عمل وأنشئ ملفك الشخصي مع سيرتك الذاتية.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100 border-0 text-center p-4">
+                <div class="card-body">
+                    <div class="rounded-circle d-inline-flex align-items-center justify-content-center mb-4" 
+                         style="width: 100px; height: 100px; background: linear-gradient(135deg, rgba(20, 33, 61, 0.1) 0%, rgba(30, 49, 96, 0.15) 100%);">
+                        <i class="bi bi-search-heart-fill" style="font-size: 3rem; color: var(--prussian-blue);"></i>
+                    </div>
+                    <h4 class="fw-bold text-dark mb-3">ابحث عن المواهب</h4>
+                    <p class="text-muted mb-0" style="line-height: 1.8;">سجّل كصاحب عمل وابحث عن المرشحين حسب التخصص والمهارات.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100 border-0 text-center p-4">
+                <div class="card-body">
+                    <div class="rounded-circle d-inline-flex align-items-center justify-content-center mb-4" 
+                         style="width: 100px; height: 100px; background: linear-gradient(135deg, rgba(72, 187, 120, 0.1) 0%, rgba(56, 161, 105, 0.15) 100%);">
+                        <i class="bi bi-bell-fill" style="font-size: 3rem; color: var(--success-color);"></i>
+                    </div>
+                    <h4 class="fw-bold text-dark mb-3">تلقّ الإشعارات</h4>
+                    <p class="text-muted mb-0" style="line-height: 1.8;">احصل على إشعار فوري عندما يزور صاحب عمل ملفك الشخصي.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="card border-0 overflow-hidden">
+    <div class="card-body p-5 text-center" style="background: linear-gradient(135deg, var(--prussian-blue) 0%, var(--prussian-blue-light) 100%);">
+        <h3 class="fw-bold mb-4" style="color: var(--white); font-size: 2rem;">ابدأ رحلتك المهنية اليوم</h3>
+        <p class="mb-5" style="color: rgba(255,255,255,0.9); font-size: 1.2rem;">انضم إلى آلاف الباحثين عن عمل وأصحاب العمل الذين يثقون بمنصتنا</p>
+        <div class="d-flex justify-content-center gap-3 flex-wrap">
+            <a asp-controller="Account" asp-action="RegisterEmployer" class="btn btn-light btn-lg fw-bold">
+                <i class="bi bi-briefcase me-2"></i>توظف الآن
+            </a>
+            <a asp-controller="Account" asp-action="RegisterJobSeeker" class="btn btn-outline-light btn-lg fw-bold">
+                <i class="bi bi-person-badge me-2"></i>أنشئ ملفك
+            </a>
+        </div>
+    </div>
+</section>

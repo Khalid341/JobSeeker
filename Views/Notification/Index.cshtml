@@ -1,0 +1,118 @@
+@model List<NotificationViewModel>
+@{
+    ViewData["Title"] = "الإشعارات";
+    Layout = "_JobSeekerLayout";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-5">
+    <h3 class="mb-0">
+        <i class="bi bi-bell-fill me-2 text-primary"></i>جميع الإشعارات
+    </h3>
+    @if (Model.Any())
+    {
+        <button id="markAllReadPage" class="btn btn-outline-primary">
+            <i class="bi bi-check2-all me-2"></i>تحديد الكل كمقروء
+        </button>
+    }
+</div>
+
+@if (Model.Any())
+{
+    <div class="row g-4">
+        @foreach (var notification in Model)
+        {
+            <div class="col-12">
+                <div class="card shadow-sm border-0 notification-item @(notification.IsRead ? "" : "notification-unread")" data-id="@notification.Id">
+                    <div class="card-body p-4">
+                        <div class="d-flex align-items-start">
+                            <div class="flex-shrink-0 me-3">
+                                @if (!notification.IsRead)
+                                {
+                                    <div class="notification-icon notification-icon-unread">
+                                        <i class="bi bi-bell-fill"></i>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="notification-icon notification-icon-read">
+                                        <i class="bi bi-bell"></i>
+                                    </div>
+                                }
+                            </div>
+                            <div class="flex-grow-1">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <h5 class="mb-0 @(notification.IsRead ? "text-muted" : "text-dark fw-bold")">
+                                        @notification.Title
+                                    </h5>
+                                    <small class="text-muted ms-2 flex-shrink-0">
+                                        <i class="bi bi-clock me-1"></i>@notification.TimeAgo
+                                    </small>
+                                </div>
+                                <p class="text-muted mb-3 @(notification.IsRead ? "" : "fw-semibold")">
+                                    @notification.Message
+                                </p>
+                                <div class="d-flex gap-2">
+                                    @if (!notification.IsRead)
+                                    {
+                                        <button class="btn btn-sm btn-outline-primary mark-read-btn" data-id="@notification.Id">
+                                            <i class="bi bi-check2-circle me-1"></i>تعليم كمقروء
+                                        </button>
+                                    }
+                                    @if (!string.IsNullOrEmpty(notification.LinkUrl))
+                                    {
+                                        <a href="@notification.LinkUrl" class="btn btn-sm btn-outline-secondary">
+                                            <i class="bi bi-arrow-up-right me-1"></i>عرض التفاصيل
+                                        </a>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <div class="empty-state py-5">
+        <img src="~/images/notification-illustration.svg" alt="No notifications" class="img-fluid mb-4" style="max-width: 250px;">
+        <h4 class="text-dark mb-3">لا توجد إشعارات</h4>
+        <p class="text-muted">ستظهر هنا الإشعارات عند زيارة أصحاب العمل لملفك الشخصي</p>
+    </div>
+}
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('.mark-read-btn').on('click', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                var id = $(this).data('id');
+                var card = $(this).closest('.notification-item');
+
+                $.post('/Notification/MarkAsRead', { id: id }, function () {
+                    card.removeClass('notification-unread');
+                    card.find('.notification-icon-unread').removeClass('notification-icon-unread').addClass('notification-icon-read');
+                    card.find('.notification-icon i').removeClass('bi-bell-fill').addClass('bi-bell');
+                    card.find('h5').removeClass('text-dark fw-bold').addClass('text-muted');
+                    card.find('p').removeClass('fw-semibold');
+                    $(e.target).closest('.mark-read-btn').remove();
+                    loadNotificationCount();
+                });
+            });
+
+            $('#markAllReadPage').on('click', function () {
+                $.post('/Notification/MarkAllAsRead', function () {
+                    $('.notification-item').removeClass('notification-unread');
+                    $('.notification-icon-unread').removeClass('notification-icon-unread').addClass('notification-icon-read');
+                    $('.notification-icon i').removeClass('bi-bell-fill').addClass('bi-bell');
+                    $('.notification-item h5').removeClass('text-dark fw-bold').addClass('text-muted');
+                    $('.notification-item p').removeClass('fw-semibold');
+                    $('.mark-read-btn').remove();
+                    loadNotificationCount();
+                });
+            });
+        });
+    </script>
+}

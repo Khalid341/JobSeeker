@@ -1,0 +1,205 @@
+@model JobSeekerDashboardViewModel
+@{
+    ViewData["Title"] = "لوحة تحكم الباحث";
+    Layout = "_JobSeekerLayout";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-5">
+    <h2 class="mb-0">
+        <i class="bi bi-speedometer2 me-2 text-primary"></i>لوحة التحكم
+    </h2>
+    <span class="text-muted">مرحباً بك في لوحة التحكم</span>
+</div>
+
+<!-- Stats Cards -->
+<div class="row g-4 mb-5">
+    <div class="col-md-4">
+        <div class="card dashboard-card bg-primary text-white border-0 h-100">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                    <div>
+                        <h6 class="card-title">نسبة اكتمال الملف</h6>
+                        <h3 class="mb-0 mt-3">@Model.ProfileCompletionPercentage%</h3>
+                    </div>
+                    <i class="bi bi-person-check-fill"></i>
+                </div>
+                <div class="progress mt-3">
+                    <div class="progress-bar bg-white" style="width: @Model.ProfileCompletionPercentage%"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card dashboard-card bg-success text-white border-0 h-100">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <h6 class="card-title">مشاهدات الملف</h6>
+                        <h3 class="mb-0 mt-3">@Model.ProfileViewsCount</h3>
+                    </div>
+                    <i class="bi bi-eye-fill"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card dashboard-card bg-warning text-white border-0 h-100">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <h6 class="card-title">إشعارات غير مقروءة</h6>
+                        <h3 class="mb-0 mt-3">@Model.UnreadNotificationsCount</h3>
+                    </div>
+                    <i class="bi bi-bell-fill"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <!-- Resume Status -->
+    <div class="col-md-6">
+        <div class="card shadow border-0 h-100">
+            <div class="card-header bg-white border-bottom py-4">
+                <h5 class="mb-0 text-dark">
+                    <i class="bi bi-file-earmark-pdf-fill me-2 text-danger"></i>حالة السيرة الذاتية
+                </h5>
+            </div>
+            <div class="card-body p-4">
+                @if (Model.HasResume)
+                {
+                    <div class="alert alert-success mb-4">
+                        <i class="bi bi-check-circle-fill me-2"></i>تم رفع السيرة الذاتية بنجاح
+                    </div>
+                    <div class="mb-3">
+                        <label class="fw-bold text-dark mb-1">اسم الملف:</label>
+                        <p class="text-muted mb-0">@Model.ResumeOriginalName</p>
+                    </div>
+                    <div class="mb-4">
+                        <label class="fw-bold text-dark mb-1">تاريخ الرفع:</label>
+                        <p class="text-muted mb-0">@Model.ResumeUploadedAt?.ToString("yyyy-MM-dd HH:mm")</p>
+                    </div>
+                }
+                else
+                {
+                    <div class="alert alert-warning mb-4">
+                        <i class="bi bi-exclamation-triangle-fill me-2"></i>لم يتم رفع السيرة الذاتية بعد
+                    </div>
+                    <p class="text-muted mb-4" style="line-height: 1.8;">ارفع سيرتك الذاتية بصيغة PDF لزيادة فرص ظهورك لأصحاب العمل.</p>
+                }
+                <div class="d-flex gap-2">
+                    <a asp-action="UploadResume" class="btn btn-primary">
+                        <i class="bi bi-cloud-upload me-2"></i>@(Model.HasResume ? "تحديث السيرة" : "رفع السيرة")
+                    </a>
+                    <a asp-action="Profile" class="btn btn-outline-primary">
+                        <i class="bi bi-person me-2"></i>عرض الملف
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Completion Tips -->
+    <div class="col-md-6">
+        <div class="card shadow border-0 h-100">
+            <div class="card-header bg-white border-bottom py-4">
+                <h5 class="mb-0 text-dark">
+                    <i class="bi bi-lightbulb-fill me-2 text-warning"></i>نصائح لرفع نسبة الاكتمال
+                </h5>
+            </div>
+            <div class="card-body p-4">
+                @if (Model.CompletionTips.Any())
+                {
+                    <ul class="list-group list-group-flush">
+                        @foreach (var tip in Model.CompletionTips)
+                        {
+                            <li class="list-group-item px-0 border-0">
+                                <i class="bi bi-check-circle-fill text-primary me-2"></i>@tip
+                            </li>
+                        }
+                    </ul>
+                }
+                else
+                {
+                    <div class="alert alert-success mb-0">
+                        <i class="bi bi-trophy-fill me-2"></i>ملفك الشخصي مكتمل! أنت جاهز للظهور لأصحاب العمل.
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Viewers -->
+    <div class="col-md-6">
+        <div class="card shadow border-0 h-100">
+            <div class="card-header bg-white border-bottom py-4">
+                <h5 class="mb-0 text-dark">
+                    <i class="bi bi-eye-fill me-2 text-success"></i>آخر الشركات التي زارت ملفك
+                </h5>
+            </div>
+            <div class="card-body p-4">
+                @if (Model.RecentViewers.Any())
+                {
+                    <ul class="list-group list-group-flush">
+                        @foreach (var viewer in Model.RecentViewers)
+                        {
+                            <li class="list-group-item px-0 d-flex justify-content-between align-items-center border-0">
+                                <div>
+                                    <i class="bi bi-building-fill me-2 text-primary"></i>
+                                    <span class="fw-semibold">@viewer.CompanyName</span>
+                                </div>
+                                <small class="text-muted">@viewer.ViewedAt.ToString("yyyy-MM-dd HH:mm")</small>
+                            </li>
+                        }
+                    </ul>
+                }
+                else
+                {
+                    <div class="empty-state py-4">
+                        <i class="bi bi-eye-slash" style="font-size: 3rem;"></i>
+                        <p class="text-muted mt-3 mb-0">لم تتم أي زيارات لملفك بعد</p>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Notifications -->
+    <div class="col-md-6">
+        <div class="card shadow border-0 h-100">
+            <div class="card-header bg-white border-bottom d-flex justify-content-between align-items-center py-4">
+                <h5 class="mb-0 text-dark">
+                    <i class="bi bi-bell-fill me-2 text-warning"></i>آخر الإشعارات
+                </h5>
+                <a asp-controller="Notification" asp-action="Index" class="btn btn-outline-primary btn-sm">
+                    عرض الكل <i class="bi bi-arrow-left ms-1"></i>
+                </a>
+            </div>
+            <div class="card-body p-4">
+                @if (Model.RecentNotifications.Any())
+                {
+                    <ul class="list-group list-group-flush">
+                        @foreach (var notification in Model.RecentNotifications)
+                        {
+                            <li class="list-group-item px-0 border-0 @(notification.IsRead ? "" : "bg-light fw-bold rounded")">
+                                <div class="d-flex justify-content-between mb-1">
+                                    <span class="text-dark fw-semibold">@notification.Title</span>
+                                    <small class="text-muted">@notification.TimeAgo</small>
+                                </div>
+                                <small class="text-muted">@notification.Message</small>
+                            </li>
+                        }
+                    </ul>
+                }
+                else
+                {
+                    <div class="empty-state py-4">
+                        <i class="bi bi-bell-slash" style="font-size: 3rem;"></i>
+                        <p class="text-muted mt-3 mb-0">لا توجد إشعارات جديدة</p>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

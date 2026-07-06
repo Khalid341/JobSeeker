@@ -1,0 +1,70 @@
+@model List<EmployerListViewModel>
+@{
+    ViewData["Title"] = "إدارة أصحاب العمل";
+    Layout = "_AdminLayout";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-5">
+    <h3 class="mb-0">
+        <i class="bi bi-building-fill me-2 text-primary"></i>إدارة أصحاب العمل
+    </h3>
+    <span class="badge bg-primary fs-5 px-4 py-2">@Model.Count شركة</span>
+</div>
+
+<div class="card shadow border-0">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th>اسم الشركة</th>
+                        <th>الممثل</th>
+                        <th>البريد الإلكتروني</th>
+                        <th>المجال</th>
+                        <th>المدينة</th>
+                        <th>الوظائف</th>
+                        <th>الحالة</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var employer in Model)
+                    {
+                        <tr>
+                            <td class="fw-bold">@employer.CompanyName</td>
+                            <td>@employer.FullName</td>
+                            <td class="text-break">@employer.Email</td>
+                            <td>@(employer.Industry ?? "-")</td>
+                            <td>@(employer.City ?? "-")</td>
+                            <td>
+                                <span class="badge bg-info">@employer.JobPostsCount</span>
+                            </td>
+                            <td>
+                                @if (employer.IsActive)
+                                {
+                                    <span class="badge bg-success">
+                                        <i class="bi bi-check-circle me-1"></i>نشط
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary">
+                                        <i class="bi bi-x-circle me-1"></i>معطل
+                                    </span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@if (!Model.Any())
+{
+    <div class="empty-state py-5">
+        <img src="~/images/empty-state.svg" alt="No employers" class="img-fluid mb-4" style="max-width: 250px;">
+        <h4 class="text-dark mb-3">لا يوجد أصحاب عمل مسجلين</h4>
+        <p class="text-muted">سيظهر هنا أصحاب العمل عند التسجيل</p>
+    </div>
+}

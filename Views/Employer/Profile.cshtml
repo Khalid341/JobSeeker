@@ -1,0 +1,101 @@
+@model EmployerProfileViewModel
+@{
+    ViewData["Title"] = "ملف الشركة";
+    Layout = "_EmployerLayout";
+}
+
+<div class="card shadow-lg border-0">
+    <div class="card-header bg-white border-bottom d-flex justify-content-between align-items-center py-4">
+        <h4 class="mb-0">
+            <i class="bi bi-building-fill me-2 text-primary"></i>ملف الشركة
+        </h4>
+        <a asp-action="EditCompany" class="btn btn-primary">
+            <i class="bi bi-pencil-square me-2"></i>تعديل الملف
+        </a>
+    </div>
+    <div class="card-body p-5">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="d-flex align-items-center mb-5">
+                    @if (!string.IsNullOrEmpty(Model.LogoFileName))
+                    {
+                        <img src="~/uploads/logos/@Model.LogoFileName" alt="@Model.CompanyName" class="company-logo-lg me-4" />
+                    }
+                    else
+                    {
+                        <div class="company-logo-lg-placeholder me-4 d-flex align-items-center justify-content-center">
+                            <i class="bi bi-building-fill"></i>
+                        </div>
+                    }
+                    <div>
+                        <h2 class="fw-bold mb-2">@Model.CompanyName</h2>
+                        @if (!string.IsNullOrEmpty(Model.Industry))
+                        {
+                            <p class="text-primary fs-5 mb-2 fw-semibold">
+                                <i class="bi bi-briefcase-fill me-2"></i>@Model.Industry
+                            </p>
+                        }
+                        @if (!string.IsNullOrEmpty(Model.City))
+                        {
+                            <p class="text-muted mb-0">
+                                <i class="bi bi-geo-alt-fill me-2"></i>@Model.City
+                            </p>
+                        }
+                    </div>
+                </div>
+
+                @if (!string.IsNullOrEmpty(Model.Description))
+                {
+                    <div class="mb-4">
+                        <h5 class="fw-bold mb-3">
+                            <i class="bi bi-info-circle-fill me-2 text-primary"></i>وصف الشركة
+                        </h5>
+                        <p class="text-muted" style="white-space: pre-line; line-height: 2; font-size: 1.1rem;">@Model.Description</p>
+                    </div>
+                }
+            </div>
+
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm" style="background: linear-gradient(135deg, rgba(245, 247, 250, 0.8) 0%, rgba(226, 232, 240, 0.8) 100%);">
+                    <div class="card-body p-4">
+                        <h6 class="fw-bold mb-4">
+                            <i class="bi bi-envelope-fill me-2 text-primary"></i>معلومات التواصل
+                        </h6>
+                        <ul class="list-unstyled mb-4">
+                            <li class="mb-3">
+                                <i class="bi bi-person-fill me-2 text-primary"></i>@Model.FullName
+                            </li>
+                            <li class="mb-3">
+                                <i class="bi bi-envelope-fill me-2 text-primary"></i>
+                                <span class="text-break">@Model.Email</span>
+                            </li>
+                            @if (!string.IsNullOrEmpty(Model.Website))
+                            {
+                                <li class="mb-3">
+                                    <i class="bi bi-globe me-2 text-primary"></i>
+                                    <a href="@Model.Website" target="_blank" class="fw-semibold text-break">@Model.Website</a>
+                                </li>
+                            }
+                            @if (!string.IsNullOrEmpty(Model.CompanySize))
+                            {
+                                <li class="mb-3">
+                                    <i class="bi bi-people-fill me-2 text-primary"></i>@Model.CompanySize موظف
+                                </li>
+                            }
+                        </ul>
+
+                        <hr class="my-4" />
+
+                        <h6 class="fw-bold mb-3">
+                            <i class="bi bi-bar-chart-fill me-2 text-success"></i>إحصائيات
+                        </h6>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="text-muted">الملفات المشاهدة</span>
+                            <span class="badge bg-success fs-6 px-3 py-2">@Model.ProfileViewsCount</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

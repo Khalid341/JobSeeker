@@ -1,0 +1,158 @@
+@model CandidateDetailsViewModel
+@{
+    ViewData["Title"] = $"ملف {Model.FullName}";
+    Layout = "_EmployerLayout";
+}
+
+<div class="card shadow-lg border-0">
+    <div class="card-header bg-white border-bottom d-flex justify-content-between align-items-center py-4">
+        <h4 class="mb-0">
+            <i class="bi bi-person-lines-fill me-2 text-primary"></i>ملف المرشح
+        </h4>
+        <a asp-action="SearchCandidates" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-right me-2"></i>العودة للبحث
+        </a>
+    </div>
+    <div class="card-body p-5">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="mb-4">
+                    <h2 class="fw-bold mb-2">@Model.FullName</h2>
+                    @if (!string.IsNullOrEmpty(Model.JobTitle))
+                    {
+                        <p class="text-primary fs-4 mb-3 fw-semibold">@Model.JobTitle</p>
+                    }
+                    @if (!string.IsNullOrEmpty(Model.Specialty))
+                    {
+                        <p class="text-muted mb-3">
+                            <i class="bi bi-briefcase-fill me-2 text-primary"></i>@Model.Specialty
+                        </p>
+                    }
+                </div>
+
+                <div class="d-flex gap-2 flex-wrap mb-4">
+                    @if (Model.IsAvailable)
+                    {
+                        <span class="badge bg-success fs-6 px-3 py-2">
+                            <i class="bi bi-check-circle-fill me-1"></i>متاح للعمل
+                        </span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-secondary fs-6 px-3 py-2">
+                            <i class="bi bi-x-circle-fill me-1"></i>غير متاح حالياً
+                        </span>
+                    }
+
+                    @if (Model.AlreadyViewedToday)
+                    {
+                        <span class="badge bg-info fs-6 px-3 py-2">
+                            <i class="bi bi-info-circle-fill me-1"></i>زرت هذا الملف خلال 24 ساعة
+                        </span>
+                    }
+                </div>
+
+                <hr class="my-4" />
+
+                @if (!string.IsNullOrEmpty(Model.Bio))
+                {
+                    <div class="mb-4">
+                        <h5 class="fw-bold mb-3">
+                            <i class="bi bi-person-fill me-2 text-primary"></i>نبذة شخصية
+                        </h5>
+                        <p class="text-muted" style="line-height: 2; font-size: 1.1rem;">@Model.Bio</p>
+                    </div>
+                }
+
+                @if (!string.IsNullOrEmpty(Model.Skills))
+                {
+                    <div class="mb-4">
+                        <h5 class="fw-bold mb-3">
+                            <i class="bi bi-stars me-2 text-primary"></i>المهارات
+                        </h5>
+                        <div class="d-flex flex-wrap gap-2">
+                            @foreach (var skill in Model.Skills.Split(',', StringSplitOptions.RemoveEmptyEntries))
+                            {
+                                <span class="badge bg-light text-dark border fs-6 px-3 py-2">@skill.Trim()</span>
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm" style="background: linear-gradient(135deg, rgba(245, 247, 250, 0.8) 0%, rgba(226, 232, 240, 0.8) 100%);">
+                    <div class="card-body p-4">
+                        <h6 class="fw-bold mb-4">
+                            <i class="bi bi-envelope-fill me-2 text-primary"></i>معلومات التواصل
+                        </h6>
+                        <ul class="list-unstyled mb-4">
+                            <li class="mb-3">
+                                <i class="bi bi-envelope-fill me-2 text-primary"></i>
+                                <span class="text-break">@Model.Email</span>
+                            </li>
+                            @if (!string.IsNullOrEmpty(Model.PhoneNumber))
+                            {
+                                <li class="mb-3">
+                                    <i class="bi bi-telephone-fill me-2 text-primary"></i>@Model.PhoneNumber
+                                </li>
+                            }
+                            @if (!string.IsNullOrEmpty(Model.City))
+                            {
+                                <li class="mb-3">
+                                    <i class="bi bi-geo-alt-fill me-2 text-primary"></i>@Model.City
+                                </li>
+                            }
+                            @if (!string.IsNullOrEmpty(Model.LinkedInUrl))
+                            {
+                                <li class="mb-3">
+                                    <i class="bi bi-linkedin me-2 text-primary"></i>
+                                    <a href="@Model.LinkedInUrl" target="_blank" class="fw-semibold">LinkedIn</a>
+                                </li>
+                            }
+                            @if (!string.IsNullOrEmpty(Model.GitHubUrl))
+                            {
+                                <li class="mb-3">
+                                    <i class="bi bi-github me-2 text-primary"></i>
+                                    <a href="@Model.GitHubUrl" target="_blank" class="fw-semibold">GitHub</a>
+                                </li>
+                            }
+                        </ul>
+
+                        <hr class="my-4" />
+
+                        <h6 class="fw-bold mb-3">
+                            <i class="bi bi-file-earmark-pdf-fill me-2 text-danger"></i>السيرة الذاتية
+                        </h6>
+                        @if (Model.HasResume)
+                        {
+                            <div class="alert alert-success mb-3">
+                                <i class="bi bi-file-earmark-pdf-fill me-2"></i>
+                                <span class="text-break">@Model.ResumeOriginalName</span>
+                            </div>
+                            <a asp-action="DownloadResume" asp-route-id="@Model.Id" class="btn btn-primary w-100 btn-lg">
+                                <i class="bi bi-download me-2"></i>تحميل السيرة
+                            </a>
+                        }
+                        else
+                        {
+                            <div class="alert alert-warning mb-0">
+                                <i class="bi bi-exclamation-triangle-fill me-2"></i>لا توجد سيرة ذاتية
+                            </div>
+                        }
+
+                        <hr class="my-4" />
+
+                        <h6 class="fw-bold mb-3">
+                            <i class="bi bi-bar-chart-fill me-2 text-success"></i>إحصائيات
+                        </h6>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="text-muted">عدد المشاهدات</span>
+                            <span class="badge bg-success fs-6 px-3 py-2">@Model.ViewsCount</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

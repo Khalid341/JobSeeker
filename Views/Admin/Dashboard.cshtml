@@ -1,0 +1,201 @@
+@model AdminDashboardViewModel
+@{
+    ViewData["Title"] = "لوحة تحكم المدير";
+    Layout = "_AdminLayout";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-5">
+    <h2 class="mb-0">
+        <i class="bi bi-shield-lock-fill me-2 text-primary"></i>لوحة تحكم المدير
+    </h2>
+    <span class="text-muted">نظرة عامة على النظام</span>
+</div>
+
+<!-- Stats Cards -->
+<div class="row g-4 mb-5">
+    <div class="col-md-6 col-lg-3">
+        <div class="card dashboard-card bg-primary text-white border-0 h-100">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <h6 class="card-title">إجمالي المستخدمين</h6>
+                        <h3 class="mb-0 mt-3">@Model.TotalUsers</h3>
+                    </div>
+                    <i class="bi bi-people-fill"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-lg-3">
+        <div class="card dashboard-card bg-success text-white border-0 h-100">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <h6 class="card-title">الباحثين</h6>
+                        <h3 class="mb-0 mt-3">@Model.TotalJobSeekers</h3>
+                    </div>
+                    <i class="bi bi-person-badge-fill"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-lg-3">
+        <div class="card dashboard-card bg-info text-white border-0 h-100">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <h6 class="card-title">أصحاب العمل</h6>
+                        <h3 class="mb-0 mt-3">@Model.TotalEmployers</h3>
+                    </div>
+                    <i class="bi bi-building-fill"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-lg-3">
+        <div class="card dashboard-card bg-warning text-white border-0 h-100">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <h6 class="card-title">السير الذاتية</h6>
+                        <h3 class="mb-0 mt-3">@Model.TotalResumes</h3>
+                    </div>
+                    <i class="bi bi-file-earmark-pdf-fill"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <!-- Chart -->
+    <div class="col-lg-8">
+        <div class="card shadow border-0 h-100">
+            <div class="card-header bg-white border-bottom py-4">
+                <h5 class="mb-0 text-dark">
+                    <i class="bi bi-graph-up-arrow me-2 text-primary"></i>مشاهدات الملفات - آخر 7 أيام
+                </h5>
+            </div>
+            <div class="card-body p-4">
+                <canvas id="viewsChart" height="120"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Users -->
+    <div class="col-lg-4">
+        <div class="card shadow border-0 h-100">
+            <div class="card-header bg-white border-bottom d-flex justify-content-between align-items-center py-4">
+                <h5 class="mb-0 text-dark">
+                    <i class="bi bi-clock-history me-2 text-success"></i>آخر التسجيلات
+                </h5>
+                <a asp-action="Users" class="btn btn-outline-primary btn-sm">
+                    عرض الكل <i class="bi bi-arrow-left ms-1"></i>
+                </a>
+            </div>
+            <div class="card-body p-0">
+                <ul class="list-group list-group-flush">
+                    @foreach (var user in Model.RecentUsers)
+                    {
+                        <li class="list-group-item d-flex justify-content-between align-items-center py-3 px-4">
+                            <div>
+                                <span class="fw-bold">@user.FullName</span>
+                                <small class="text-muted d-block mt-1">@user.UserType</small>
+                            </div>
+                            @if (user.IsActive)
+                            {
+                                <span class="badge bg-success">
+                                    <i class="bi bi-check-circle me-1"></i>نشط
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary">
+                                    <i class="bi bi-x-circle me-1"></i>معطل
+                                </span>
+                            }
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const ctx = document.getElementById('viewsChart').getContext('2d');
+        const chartData = @Html.Raw(Json.Serialize(Model.ViewsChartData));
+
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: chartData.map(d => d.date),
+                datasets: [{
+                    label: 'عدد المشاهدات',
+                    data: chartData.map(d => d.count),
+                    borderColor: '#fca311',
+                    backgroundColor: 'rgba(252, 163, 17, 0.15)',
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.4,
+                    pointBackgroundColor: '#fca311',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2,
+                    pointRadius: 6,
+                    pointHoverRadius: 8
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        backgroundColor: '#14213d',
+                        titleColor: '#fff',
+                        bodyColor: '#fff',
+                        padding: 12,
+                        displayColors: false,
+                        callbacks: {
+                            label: function(context) {
+                                return context.parsed.y + ' مشاهدة';
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1,
+                            color: '#718096',
+                            font: {
+                                size: 12,
+                                weight: '600'
+                            }
+                        },
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.05)'
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            color: '#718096',
+                            font: {
+                                size: 12,
+                                weight: '600'
+                            }
+                        },
+                        grid: {
+                            display: false
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+}

@@ -1,0 +1,203 @@
+﻿<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - منصة توظيف</title>
+    <link rel="icon" type="image/svg+xml" href="~/favicon.svg" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.rtl.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    @await RenderSectionAsync("Styles", required: false)
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark shadow-sm">
+            <div class="container">
+                <a class="navbar-brand fw-bold d-flex align-items-center" asp-controller="Home" asp-action="Index">
+                    <img src="~/images/logo.svg" alt="منصة توظيف" class="me-2" style="width: 40px; height: 40px;">
+                    <span>منصة توظيف</span>
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" aria-controls="mainNavbar"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="mainNavbar">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Home" asp-action="Index">
+                                <i class="bi bi-house-door me-1"></i>الرئيسية
+                            </a>
+                        </li>
+                        @if (User.Identity?.IsAuthenticated == true)
+                        {
+                            @if (User.IsInRole("JobSeeker"))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="JobSeeker" asp-action="Dashboard">
+                                        <i class="bi bi-speedometer2 me-1"></i>لوحة التحكم
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="JobSeeker" asp-action="Profile">
+                                        <i class="bi bi-person me-1"></i>ملفي الشخصي
+                                    </a>
+                                </li>
+                            }
+                            else if (User.IsInRole("Employer"))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="Employer" asp-action="Dashboard">
+                                        <i class="bi bi-speedometer2 me-1"></i>لوحة التحكم
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="Employer" asp-action="SearchCandidates">
+                                        <i class="bi bi-search me-1"></i>البحث عن مرشحين
+                                    </a>
+                                </li>
+                            }
+                            else if (User.IsInRole("Admin"))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="Admin" asp-action="Dashboard">
+                                        <i class="bi bi-shield-lock me-1"></i>لوحة الإدارة
+                                    </a>
+                                </li>
+                            }
+                        }
+                    </ul>
+                    <ul class="navbar-nav">
+                        @if (User.Identity?.IsAuthenticated == true)
+                        {
+                            @if (User.IsInRole("JobSeeker"))
+                            {
+                                <li class="nav-item dropdown me-2">
+                                    <a class="nav-link position-relative" href="#" id="notificationDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="bi bi-bell-fill" style="font-size: 1.3rem;"></i>
+                                        <span id="notificationCount" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="display:none;">
+                                            0
+                                        </span>
+                                    </a>
+                                    <ul class="dropdown-menu dropdown-menu-end notification-dropdown p-0" aria-labelledby="notificationDropdown">
+                                        <li class="dropdown-header p-3 d-flex justify-content-between align-items-center">
+                                            <span class="fw-bold">الإشعارات</span>
+                                            <a href="/Notification" class="small text-decoration-none">عرض الكل</a>
+                                        </li>
+                                        <li id="notificationList">
+                                            <div class="text-center p-4 text-muted">
+                                                <i class="bi bi-bell-slash mb-2" style="font-size: 2rem; opacity: 0.3;"></i>
+                                                <p class="small mb-0">لا توجد إشعارات</p>
+                                            </div>
+                                        </li>
+                                        <li class="dropdown-divider m-0"></li>
+                                        <li>
+                                            <button id="markAllRead" class="dropdown-item text-center small py-2">
+                                                <i class="bi bi-check2-all me-1"></i>تحديد الكل كمقروء
+                                            </button>
+                                        </li>
+                                    </ul>
+                                </li>
+                            }
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="bi bi-person-circle me-1"></i>@User.Identity?.Name
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                                    @if (User.IsInRole("JobSeeker"))
+                                    {
+                                        <li><a class="dropdown-item" asp-controller="JobSeeker" asp-action="Profile"><i class="bi bi-person me-2"></i>ملفي الشخصي</a></li>
+                                        <li><a class="dropdown-item" asp-controller="JobSeeker" asp-action="UploadResume"><i class="bi bi-file-earmark-pdf me-2"></i>السيرة الذاتية</a></li>
+                                    }
+                                    else if (User.IsInRole("Employer"))
+                                    {
+                                        <li><a class="dropdown-item" asp-controller="Employer" asp-action="Profile"><i class="bi bi-building me-2"></i>ملف الشركة</a></li>
+                                        <li><a class="dropdown-item" asp-controller="Employer" asp-action="SearchCandidates"><i class="bi bi-search me-2"></i>البحث عن مرشحين</a></li>
+                                    }
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li>
+                                        <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
+                                            <button type="submit" class="dropdown-item text-danger"><i class="bi bi-box-arrow-right me-2"></i>تسجيل الخروج</button>
+                                        </form>
+                                    </li>
+                                </ul>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Account" asp-action="Login">
+                                    <i class="bi bi-box-arrow-in-right me-1"></i>تسجيل الدخول
+                                </a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="registerDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="bi bi-person-plus me-1"></i>إنشاء حساب
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="registerDropdown">
+                                    <li><a class="dropdown-item" asp-controller="Account" asp-action="RegisterJobSeeker"><i class="bi bi-person me-2"></i>باحث عن عمل</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Account" asp-action="RegisterEmployer"><i class="bi bi-building me-2"></i>صاحب عمل</a></li>
+                                </ul>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container">
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert alert-success alert-dismissible fade show mt-4" role="alert">
+                <i class="bi bi-check-circle-fill me-2"></i>@TempData["Success"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert alert-danger alert-dismissible fade show mt-4" role="alert">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i>@TempData["Error"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+
+        <main role="main" class="pb-5 pt-4">
+            @RenderBody()
+        </main>
+    </div>
+
+    @if (User.Identity?.IsAuthenticated == true)
+    {
+        <input type="hidden" id="currentUserId" value="@User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value" />
+    }
+
+    <footer class="footer mt-auto">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <div class="d-flex align-items-center mb-3 mb-md-0">
+                        <img src="~/images/logo.svg" alt="منصة توظيف" class="me-3" style="width: 50px; height: 50px;">
+                        <div>
+                            <h5 class="fw-bold mb-1">منصة توظيف</h5>
+                            <p class="small mb-0" style="opacity: 0.8;">تواصل بين أصحاب العمل والباحثين عن عمل</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <p class="mb-0 small" style="opacity: 0.8;">&copy; @DateTime.Now.Year - منصة توظيف. جميع الحقوق محفوظة.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.7/signalr.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
