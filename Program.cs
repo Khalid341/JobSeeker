@@ -39,8 +39,29 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.SlidingExpiration = true;
 });
 
-// SignalR
-builder.Services.AddSignalR();
+// SignalR - Azure SignalR Service if available, otherwise in-memory
+var signalRBuilder = builder.Services.AddSignalR();
+var azureSignalRConnection = builder.Configuration.GetConnectionString("AzureSignalRConnection");
+if (!string.IsNullOrEmpty(azureSignalRConnection))
+{
+    signalRBuilder.AddAzureSignalR(azureSignalRConnection);
+}
+
+// Application Insights (optional but recommended)
+var appInsightsConnection = builder.Configuration["ApplicationInsights:ConnectionString"];
+if (!string.IsNullOrEmpty(appInsightsConnection))
+{
+    builder.Services.AddApplicationInsightsTelemetry(options =>
+    {
+        options.ConnectionString = appInsightsConnection;
+    });
+}
+
+// Response Compression
+builder.Services.AddResponseCompression(options =>
+{
+    options.EnableForHttps = true;
+});
 
 // Custom services
 builder.Services.AddScoped<IFileService, FileService>();
@@ -63,6 +84,7 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseResponseCompression();
 app.UseStaticFiles();
 
 app.UseRouting();
