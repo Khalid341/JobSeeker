@@ -55,6 +55,8 @@ bld/
 
 # Others
 ClientBin/
+App_Data/
+website.publishproj
 ~$*
 *~
 *.dbmdl
