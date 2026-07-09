@@ -181,14 +181,55 @@ namespace JobSeeker.Controllers
                 return RedirectToAction(nameof(Users));
             }
 
-            var result = await _userManager.DeleteAsync(user);
-            if (result.Succeeded)
+            try
             {
-                TempData["Success"] = "تم حذف المستخدم بنجاح";
+                // Delete user notifications
+                var notifications = await _context.Notifications
+                    .Where(n => n.UserId == user.Id)
+                    .ToListAsync();
+                _context.Notifications.RemoveRange(notifications);
+
+                // Delete job seeker profile and related views
+                var jobSeekerProfile = await _context.JobSeekerProfiles
+                    .FirstOrDefaultAsync(j => j.UserId == user.Id);
+                if (jobSeekerProfile != null)
+                {
+                    var jobSeekerViews = await _context.ProfileViews
+                        .Where(p => p.JobSeekerProfileId == jobSeekerProfile.Id)
+                        .ToListAsync();
+                    _context.ProfileViews.RemoveRange(jobSeekerViews);
+
+                    _context.JobSeekerProfiles.Remove(jobSeekerProfile);
+                }
+
+                // Delete employer profile and related views
+                var employerProfile = await _context.EmployerProfiles
+                    .FirstOrDefaultAsync(e => e.UserId == user.Id);
+                if (employerProfile != null)
+                {
+                    var employerViews = await _context.ProfileViews
+                        .Where(p => p.EmployerProfileId == employerProfile.Id)
+                        .ToListAsync();
+                    _context.ProfileViews.RemoveRange(employerViews);
+
+                    _context.EmployerProfiles.Remove(employerProfile);
+                }
+
+                await _context.SaveChangesAsync();
+
+                var result = await _userManager.DeleteAsync(user);
+                if (result.Succeeded)
+                {
+                    TempData["Success"] = "تم حذف المستخدم بنجاح";
+                }
+                else
+                {
+                    TempData["Error"] = "حدث خطأ أثناء حذف المستخدم: " + string.Join(", ", result.Errors.Select(e => e.Description));
+                }
             }
-            else
+            catch (Exception ex)
             {
-                TempData["Error"] = "حدث خطأ أثناء حذف المستخدم";
+                TempData["Error"] = "حدث خطأ غير متوقع: " + ex.Message;
             }
 
             return RedirectToAction(nameof(Users));

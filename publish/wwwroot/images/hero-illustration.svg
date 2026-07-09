@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
+  <defs>
+    <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#14213d;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1e3160;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="grad2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#fca311;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#e08c0a;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background circles -->
+  <circle cx="400" cy="300" r="250" fill="url(#grad1)" opacity="0.1"/>
+  <circle cx="200" cy="150" r="80" fill="#fca311" opacity="0.2"/>
+  <circle cx="600" cy="450" r="100" fill="#14213d" opacity="0.15"/>
+  
+  <!-- Person with briefcase -->
+  <g transform="translate(300, 200)">
+    <!-- Body -->
+    <ellipse cx="100" cy="180" rx="60" ry="80" fill="url(#grad1)"/>
+    <!-- Head -->
+    <circle cx="100" cy="80" r="40" fill="#fca311"/>
+    <!-- Briefcase -->
+    <rect x="140" y="150" width="80" height="60" rx="8" fill="url(#grad1)"/>
+    <rect x="140" y="150" width="80" height="15" rx="4" fill="#fca311"/>
+    <line x1="160" y1="165" x2="160" y2="210" stroke="#fca311" stroke-width="3"/>
+    <line x1="200" y1="165" x2="200" y2="210" stroke="#fca311" stroke-width="3"/>
+  </g>
+  
+  <!-- Floating elements -->
+  <g opacity="0.6">
+    <rect x="100" y="100" width="40" height="40" rx="8" fill="#fca311" transform="rotate(15 120 120)"/>
+    <circle cx="650" cy="200" r="25" fill="#14213d"/>
+    <rect x="550" y="100" width="50" height="50" rx="10" fill="#fca311" opacity="0.5" transform="rotate(-20 575 125)"/>
+    <circle cx="150" cy="400" r="30" fill="#14213d" opacity="0.4"/>
+  </g>
+  
+  <!-- Connection lines -->
+  <path d="M 200 300 Q 300 250 400 300" stroke="#fca311" stroke-width="3" fill="none" opacity="0.5"/>
+  <path d="M 400 300 Q 500 350 600 300" stroke="#14213d" stroke-width="3" fill="none" opacity="0.5"/>
+</svg>
