@@ -23,6 +23,9 @@
                     <a asp-controller="Account" asp-action="RegisterAdmin" class="list-group-item list-group-item-action @(ViewContext.RouteData.Values["Action"]?.ToString() == "RegisterAdmin" ? "active" : "")">
                         <i class="bi bi-person-plus me-2"></i>إضافة مدير
                     </a>
+                    <a asp-controller="Account" asp-action="ChangePassword" class="list-group-item list-group-item-action @(ViewContext.RouteData.Values["Action"]?.ToString() == "ChangePassword" ? "active" : "")">
+                        <i class="bi bi-shield-lock me-2"></i>تغيير كلمة المرور
+                    </a>
                 </div>
             </div>
         </div>
