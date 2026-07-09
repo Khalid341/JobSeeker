@@ -1,7 +1,11 @@
 using JobSeeker.Data;
 using JobSeeker.Hubs;
+using JobSeeker.Middleware;
 using JobSeeker.Models;
 using JobSeeker.Services;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.RateLimiting;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,22 +18,30 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Identity with roles
+// Identity with roles - production hardened
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 {
+    // Strong password policy
     options.Password.RequireDigit = true;
     options.Password.RequireLowercase = true;
     options.Password.RequireUppercase = true;
     options.Password.RequireNonAlphanumeric = true;
-    options.Password.RequiredLength = 6;
+    options.Password.RequiredLength = 8;
+    options.Password.RequiredUniqueChars = 4;
 
+    // Lockout settings
+    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
+    options.Lockout.MaxFailedAccessAttempts = 5;
+    options.Lockout.AllowedForNewUsers = true;
+
+    // User settings
     options.User.RequireUniqueEmail = true;
-    options.SignIn.RequireConfirmedEmail = false;
+    options.SignIn.RequireConfirmedEmail = false; // Set to true after configuring SMTP
 })
 .AddEntityFrameworkStores<ApplicationDbContext>()
 .AddDefaultTokenProviders();
 
-// Authentication cookie settings
+// Authentication cookie settings - production hardened
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.LoginPath = "/Account/Login";
@@ -37,25 +49,52 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.AccessDeniedPath = "/Account/AccessDenied";
     options.ExpireTimeSpan = TimeSpan.FromDays(7);
     options.SlidingExpiration = true;
+    options.Cookie.HttpOnly = true;
+    // Use SameAsRequest until HTTPS/SSL is enabled, then change to Always
+    options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+    options.Cookie.SameSite = SameSiteMode.Strict;
 });
 
-// SignalR - Azure SignalR Service if available, otherwise in-memory
-var signalRBuilder = builder.Services.AddSignalR();
-var azureSignalRConnection = builder.Configuration.GetConnectionString("AzureSignalRConnection");
-if (!string.IsNullOrEmpty(azureSignalRConnection))
-{
-    signalRBuilder.AddAzureSignalR(azureSignalRConnection);
-}
+// SignalR for real-time notifications
+builder.Services.AddSignalR();
 
-// Application Insights (optional but recommended)
-var appInsightsConnection = builder.Configuration["ApplicationInsights:ConnectionString"];
-if (!string.IsNullOrEmpty(appInsightsConnection))
+// Email service
+builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
+builder.Services.AddScoped<IEmailService, EmailService>();
+
+// Data Protection - persist keys to disk for shared hosting
+var dataProtectionPath = Path.Combine(builder.Environment.ContentRootPath, "App_Data", "DataProtection-Keys");
+Directory.CreateDirectory(dataProtectionPath);
+builder.Services.AddDataProtection()
+    .PersistKeysToFileSystem(new DirectoryInfo(dataProtectionPath))
+    .SetApplicationName("JobSeeker");
+
+// Rate Limiting
+builder.Services.AddRateLimiter(options =>
 {
-    builder.Services.AddApplicationInsightsTelemetry(options =>
+    options.AddFixedWindowLimiter("login", opt =>
     {
-        options.ConnectionString = appInsightsConnection;
+        opt.PermitLimit = 5;
+        opt.Window = TimeSpan.FromMinutes(1);
+        opt.QueueProcessingOrder = System.Threading.RateLimiting.QueueProcessingOrder.OldestFirst;
+        opt.QueueLimit = 0;
     });
-}
+
+    options.AddFixedWindowLimiter("register", opt =>
+    {
+        opt.PermitLimit = 3;
+        opt.Window = TimeSpan.FromMinutes(5);
+        opt.QueueProcessingOrder = System.Threading.RateLimiting.QueueProcessingOrder.OldestFirst;
+        opt.QueueLimit = 0;
+    });
+
+    options.OnRejected = async (context, token) =>
+    {
+        context.HttpContext.Response.StatusCode = StatusCodes.Status429TooManyRequests;
+        context.HttpContext.Response.ContentType = "text/plain; charset=utf-8";
+        await context.HttpContext.Response.WriteAsync("عدد الطلبات كثير جداً. يرجى المحاولة لاحقاً.", token);
+    };
+});
 
 // Response Compression
 builder.Services.AddResponseCompression(options =>
@@ -84,10 +123,13 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseMiddleware<SecurityHeadersMiddleware>();
 app.UseResponseCompression();
 app.UseStaticFiles();
 
 app.UseRouting();
+
+app.UseRateLimiter();
 
 app.UseAuthentication();
 app.UseAuthorization();

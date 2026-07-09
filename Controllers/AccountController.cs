@@ -1,10 +1,12 @@
 using JobSeeker.Data;
 using JobSeeker.Models;
 using JobSeeker.Models.Enums;
+using JobSeeker.Services;
 using JobSeeker.ViewModels.Account;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 
 namespace JobSeeker.Controllers
@@ -15,17 +17,59 @@ namespace JobSeeker.Controllers
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly ApplicationDbContext _context;
+        private readonly IEmailService _emailService;
+        private readonly IConfiguration _configuration;
+        private readonly ILogger<AccountController> _logger;
 
         public AccountController(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             RoleManager<IdentityRole> roleManager,
-            ApplicationDbContext context)
+            ApplicationDbContext context,
+            IEmailService emailService,
+            IConfiguration configuration,
+            ILogger<AccountController> logger)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _roleManager = roleManager;
             _context = context;
+            _emailService = emailService;
+            _configuration = configuration;
+            _logger = logger;
+        }
+
+        private bool RequireEmailConfirmation => _configuration.GetValue<bool>("EmailSettings:RequireEmailConfirmation");
+
+        private async Task SendEmailConfirmationAsync(ApplicationUser user)
+        {
+            if (!_emailService.IsConfigured())
+            {
+                _logger.LogWarning("Email service not configured. Skipping confirmation email for {Email}", user.Email);
+                return;
+            }
+
+            var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            var callbackUrl = Url.Action(
+                "ConfirmEmail",
+                "Account",
+                new { userId = user.Id, token = token },
+                protocol: Request.Scheme,
+                host: Request.Host.ToString());
+
+            var subject = "تأكيد بريدك الإلكتروني - JobSeeker";
+            var body = $@"
+                <div style='direction: rtl; text-align: right; font-family: Arial, sans-serif;'>
+                    <h2>مرحباً {user.FullName}،</h2>
+                    <p>شكراً لتسجيلك في JobSeeker. يرجى تأكيد بريدك الإلكتروني بالضغط على الرابط أدناه:</p>
+                    <p><a href='{callbackUrl}' style='padding: 10px 20px; background-color: #0d6efd; color: white; text-decoration: none; border-radius: 5px;'>تأكيد البريد الإلكتروني</a></p>
+                    <p>أو انسخ هذا الرابط ولصقه في المتصفح:</p>
+                    <p>{callbackUrl}</p>
+                    <hr>
+                    <p style='color: #6c757d;'>إذا لم تقم بتسجيل حساب، يرجى تجاهل هذه الرسالة.</p>
+                </div>";
+
+            await _emailService.SendEmailAsync(user.Email!, subject, body);
         }
 
         [HttpGet]
@@ -39,6 +83,7 @@ namespace JobSeeker.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
+        [EnableRateLimiting("login")]
         public async Task<IActionResult> Login(LoginViewModel model, string? returnUrl = null)
         {
             ViewData["ReturnUrl"] = returnUrl;
@@ -59,8 +104,14 @@ namespace JobSeeker.Controllers
                 return View(model);
             }
 
+            if (RequireEmailConfirmation && !await _userManager.IsEmailConfirmedAsync(user))
+            {
+                ModelState.AddModelError(string.Empty, "يرجى تأكيد بريدك الإلكتروني قبل تسجيل الدخول. تحقق من صندوق الوارد.");
+                return View(model);
+            }
+
             var result = await _signInManager.PasswordSignInAsync(
-                user.UserName!, model.Password, model.RememberMe, lockoutOnFailure: false);
+                user.UserName!, model.Password, model.RememberMe, lockoutOnFailure: true);
 
             if (result.Succeeded)
             {
@@ -93,6 +144,7 @@ namespace JobSeeker.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
+        [EnableRateLimiting("register")]
         public async Task<IActionResult> RegisterJobSeeker(RegisterJobSeekerViewModel model)
         {
             if (!ModelState.IsValid)
@@ -128,6 +180,14 @@ namespace JobSeeker.Controllers
                 _context.JobSeekerProfiles.Add(profile);
                 await _context.SaveChangesAsync();
 
+                await SendEmailConfirmationAsync(user);
+
+                if (RequireEmailConfirmation)
+                {
+                    TempData["Success"] = "تم إنشاء حسابك بنجاح! يرجى التحقق من بريدك الإلكتروني لتفعيل الحساب.";
+                    return RedirectToAction("Login");
+                }
+
                 await _signInManager.SignInAsync(user, isPersistent: false);
                 TempData["Success"] = "تم إنشاء حسابك بنجاح!";
                 return RedirectToAction("Dashboard", "JobSeeker");
@@ -151,6 +211,7 @@ namespace JobSeeker.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
+        [EnableRateLimiting("register")]
         public async Task<IActionResult> RegisterEmployer(RegisterEmployerViewModel model)
         {
             if (!ModelState.IsValid)
@@ -185,6 +246,14 @@ namespace JobSeeker.Controllers
                 _context.EmployerProfiles.Add(profile);
                 await _context.SaveChangesAsync();
 
+                await SendEmailConfirmationAsync(user);
+
+                if (RequireEmailConfirmation)
+                {
+                    TempData["Success"] = "تم إنشاء حساب الشركة بنجاح! يرجى التحقق من بريدك الإلكتروني لتفعيل الحساب.";
+                    return RedirectToAction("Login");
+                }
+
                 await _signInManager.SignInAsync(user, isPersistent: false);
                 TempData["Success"] = "تم إنشاء حساب الشركة بنجاح!";
                 return RedirectToAction("Dashboard", "Employer");
@@ -204,6 +273,30 @@ namespace JobSeeker.Controllers
         {
             await _signInManager.SignOutAsync();
             return RedirectToAction("Index", "Home");
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> ConfirmEmail(string userId, string token)
+        {
+            if (string.IsNullOrWhiteSpace(userId) || string.IsNullOrWhiteSpace(token))
+                return RedirectToAction("Index", "Home");
+
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+                return RedirectToAction("Index", "Home");
+
+            var result = await _userManager.ConfirmEmailAsync(user, token);
+            if (result.Succeeded)
+            {
+                TempData["Success"] = "تم تأكيد بريدك الإلكتروني بنجاح! يمكنك الآن تسجيل الدخول.";
+            }
+            else
+            {
+                TempData["Error"] = "رابط التأكيد غير صالح أو منتهي الصلاحية.";
+            }
+
+            return RedirectToAction("Login");
         }
 
         [HttpGet]
@@ -277,7 +370,11 @@ namespace JobSeeker.Controllers
             if (result.Succeeded)
             {
                 await _userManager.AddToRoleAsync(user, "Admin");
-                TempData["Success"] = "تم إنشاء حساب المدير بنجاح";
+                await SendEmailConfirmationAsync(user);
+
+                TempData["Success"] = RequireEmailConfirmation
+                    ? "تم إنشاء حساب المدير بنجاح. يرجى مطالبة المدير بالتحقق من بريده الإلكتروني."
+                    : "تم إنشاء حساب المدير بنجاح";
                 return RedirectToAction("Users", "Admin");
             }
 
