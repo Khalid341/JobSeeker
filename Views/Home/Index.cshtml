@@ -6,11 +6,14 @@
 <!-- Hero Section -->
 <section class="hero-section mb-4">
     <div class="container position-relative">
-        <div class="row align-items-center justify-content-center">
-            <div class="col-lg-7 text-center text-lg-end">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 text-center">
+                <span class="hero-badge mb-3 d-inline-block">
+                    <i class="bi bi-stars me-1"></i>منصة توظيف ذكية
+                </span>
                 <h1 class="fw-bold">ابحث عن مواهب، أو وجد فرصتك</h1>
-                <p class="lead">منصة LinkMe تربط أصحاب العمل بالباحثين عن عمل بسهولة.</p>
-                <div class="d-flex justify-content-center justify-content-lg-start gap-2 flex-wrap">
+                <p class="lead">انضم إلى LinkMe وتواصل مع أفضل الشركات والباحثين عن عمل في مكان واحد.</p>
+                <div class="d-flex justify-content-center gap-2 flex-wrap hero-actions">
                     <a asp-controller="Account" asp-action="RegisterEmployer" class="btn btn-light fw-bold">
                         <i class="bi bi-building me-2"></i>أنا صاحب عمل
                     </a>
@@ -18,9 +21,20 @@
                         <i class="bi bi-person me-2"></i>أنا باحث عن عمل
                     </a>
                 </div>
-            </div>
-            <div class="col-lg-5 text-center mt-3 mt-lg-0 d-none d-lg-block">
-                <img src="~/images/hero-illustration.svg" alt="LinkMe" class="hero-illustration" />
+                <div class="hero-stats mt-3 d-flex justify-content-center gap-4 flex-wrap">
+                    <div>
+                        <span class="fw-bold">@stats.EmployersCount</span>
+                        <small>شركة</small>
+                    </div>
+                    <div>
+                        <span class="fw-bold">@stats.JobSeekersCount</span>
+                        <small>باحث</small>
+                    </div>
+                    <div>
+                        <span class="fw-bold">@stats.ProfileViewsCount</span>
+                        <small>مشاهدة</small>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
