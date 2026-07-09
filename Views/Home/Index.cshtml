@@ -8,11 +8,8 @@
     <div class="container position-relative">
         <div class="row justify-content-center">
             <div class="col-lg-8 text-center">
-                <span class="hero-badge mb-3 d-inline-block">
-                    <i class="bi bi-stars me-1"></i>منصة توظيف ذكية
-                </span>
-                <h1 class="fw-bold">ابحث عن مواهب، أو وجد فرصتك</h1>
-                <p class="lead">انضم إلى LinkMe وتواصل مع أفضل الشركات والباحثين عن عمل في مكان واحد.</p>
+                <h1 class="fw-bold">اكتشف المواهب المتميزة</h1>
+                <p class="lead">LinkMe منصة احترافية تربط بين أصحاب العمل والباحثين عن عمل بكل سهولة وفعالية</p>
                 <div class="d-flex justify-content-center gap-2 flex-wrap hero-actions">
                     <a asp-controller="Account" asp-action="RegisterEmployer" class="btn btn-light fw-bold">
                         <i class="bi bi-building me-2"></i>أنا صاحب عمل
@@ -20,20 +17,6 @@
                     <a asp-controller="Account" asp-action="RegisterJobSeeker" class="btn btn-outline-light fw-bold">
                         <i class="bi bi-person me-2"></i>أنا باحث عن عمل
                     </a>
-                </div>
-                <div class="hero-stats mt-3 d-flex justify-content-center gap-4 flex-wrap">
-                    <div>
-                        <span class="fw-bold">@stats.EmployersCount</span>
-                        <small>شركة</small>
-                    </div>
-                    <div>
-                        <span class="fw-bold">@stats.JobSeekersCount</span>
-                        <small>باحث</small>
-                    </div>
-                    <div>
-                        <span class="fw-bold">@stats.ProfileViewsCount</span>
-                        <small>مشاهدة</small>
-                    </div>
                 </div>
             </div>
         </div>
@@ -124,22 +107,6 @@
                     <p class="text-muted mb-0 small" style="line-height: 1.7;">احصل على إشعار فوري عندما يزور صاحب عمل ملفك الشخصي.</p>
                 </div>
             </div>
-        </div>
-    </div>
-</section>
-
-<!-- CTA Section -->
-<section class="card border-0 overflow-hidden">
-    <div class="card-body p-4 text-center" style="background: linear-gradient(135deg, var(--prussian-blue) 0%, var(--prussian-blue-light) 100%); border-radius: var(--border-radius-lg);">
-        <h3 class="fw-bold mb-2" style="color: var(--white); font-size: 1.4rem;">ابدأ رحلتك المهنية اليوم</h3>
-        <p class="mb-3" style="color: rgba(255,255,255,0.9); font-size: 1rem;">انضم إلى مجتمع LinkMe واكتشف فرصاً لا حصر لها</p>
-        <div class="d-flex justify-content-center gap-2 flex-wrap">
-            <a asp-controller="Account" asp-action="RegisterEmployer" class="btn btn-light fw-bold">
-                <i class="bi bi-briefcase me-2"></i>توظف الآن
-            </a>
-            <a asp-controller="Account" asp-action="RegisterJobSeeker" class="btn btn-outline-light fw-bold">
-                <i class="bi bi-person-badge me-2"></i>أنشئ ملفك
-            </a>
         </div>
     </div>
 </section>
