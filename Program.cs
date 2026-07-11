@@ -112,7 +112,8 @@ var app = builder.Build();
 // Seed roles and admin
 using (var scope = app.Services.CreateScope())
 {
-    await DbInitializer.SeedAsync(scope.ServiceProvider);
+    var seedSampleData = app.Configuration.GetValue<bool>("SeedSampleData", app.Environment.IsDevelopment());
+    await DbInitializer.SeedAsync(scope.ServiceProvider, seedSampleData);
 }
 
 // Configure the HTTP request pipeline.

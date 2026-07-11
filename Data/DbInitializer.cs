@@ -8,7 +8,7 @@ namespace JobSeeker.Data
 {
     public static class DbInitializer
     {
-        public static async Task SeedAsync(IServiceProvider serviceProvider)
+        public static async Task SeedAsync(IServiceProvider serviceProvider, bool seedSampleData = true)
         {
             using var scope = serviceProvider.CreateScope();
             var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
@@ -51,8 +51,11 @@ namespace JobSeeker.Data
                 }
             }
 
-            // Seed sample data for testing
-            await SeedSampleDataAsync(context, userManager);
+            // Seed sample data for testing (only if enabled)
+            if (seedSampleData)
+            {
+                await SeedSampleDataAsync(context, userManager);
+            }
         }
 
         private static async Task SeedSampleDataAsync(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
