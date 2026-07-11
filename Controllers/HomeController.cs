@@ -31,6 +31,7 @@ namespace JobSeeker.Controllers
             return View();
         }
 
+        [ResponseCache(Duration = 3600, Location = ResponseCacheLocation.Any, NoStore = false)]
         public IActionResult Privacy()
         {
             return View();

@@ -8,8 +8,31 @@ using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 
-var builder = WebApplication.CreateBuilder(args);
+// Configure Serilog early to capture startup errors
+var logsPath = Path.Combine(Directory.GetCurrentDirectory(), "App_Data", "Logs");
+Directory.CreateDirectory(logsPath);
+
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Information()
+    .MinimumLevel.Override("Microsoft", Serilog.Events.LogEventLevel.Warning)
+    .MinimumLevel.Override("Microsoft.AspNetCore", Serilog.Events.LogEventLevel.Warning)
+    .Enrich.FromLogContext()
+    .WriteTo.Console()
+    .WriteTo.File(
+        Path.Combine(logsPath, "log-.txt"),
+        rollingInterval: RollingInterval.Day,
+        retainedFileCountLimit: 30,
+        outputTemplate: "[{Timestamp:yyyy-MM-dd HH:mm:ss} {Level:u3}] {Message:lj}{NewLine}{Exception}")
+    .CreateLogger();
+
+try
+{
+    Log.Information("Starting LinkMe web application");
+
+    var builder = WebApplication.CreateBuilder(args);
+    builder.Host.UseSerilog();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -102,6 +125,9 @@ builder.Services.AddResponseCompression(options =>
     options.EnableForHttps = true;
 });
 
+// Response Caching
+builder.Services.AddResponseCaching();
+
 // Custom services
 builder.Services.AddScoped<IFileService, FileService>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
@@ -126,7 +152,19 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseMiddleware<SecurityHeadersMiddleware>();
 app.UseResponseCompression();
-app.UseStaticFiles();
+app.UseResponseCaching();
+
+// Static files with caching headers for production
+app.UseStaticFiles(new StaticFileOptions
+{
+    OnPrepareResponse = ctx =>
+    {
+        if (!app.Environment.IsDevelopment())
+        {
+            ctx.Context.Response.Headers.Append("Cache-Control", "public,max-age=604800");
+        }
+    }
+});
 
 app.UseRouting();
 
@@ -143,4 +181,13 @@ app.MapControllerRoute(
 
 app.MapHub<NotificationHub>("/notificationHub");
 
-app.Run();
+    app.Run();
+}
+catch (Exception ex)
+{
+    Log.Fatal(ex, "Application terminated unexpectedly");
+}
+finally
+{
+    Log.CloseAndFlush();
+}
