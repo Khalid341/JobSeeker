@@ -6,8 +6,9 @@
     </linearGradient>
   </defs>
   <circle cx="100" cy="100" r="92" fill="url(#linkGradient)"/>
-  <g fill="#ffffff">
-    <path d="M 50 55 L 68 55 L 68 130 L 95 130 L 95 145 L 50 145 Z"/>
-    <path d="M 110 145 L 110 55 L 130 55 L 145 95 L 160 55 L 180 55 L 180 145 L 162 145 L 162 82 L 150 115 L 140 115 L 128 82 L 128 145 Z"/>
+  <g fill="none" stroke="#ffffff" stroke-width="9" stroke-linecap="round">
+    <circle cx="78" cy="100" r="26"/>
+    <circle cx="122" cy="100" r="26"/>
   </g>
+  <circle cx="100" cy="100" r="6" fill="#5eead4"/>
 </svg>
