@@ -27,5 +27,5 @@
   
   <!-- Notification badge -->
   <circle cx="280" cy="120" r="25" fill="#f56565"/>
-  <text x="280" y="130" font-family="Arial" font-size="24" font-weight="bold" fill="white" text-anchor="middle">3</text>
+  <text x="280" y="130" font-family="Arial" font-size="24" font-weight="bold" fill="white" text-anchor="middle">0</text>
 </svg>
