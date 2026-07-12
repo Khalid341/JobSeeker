@@ -870,6 +870,25 @@ p {
     background: linear-gradient(90deg, var(--orange), var(--orange-hover), var(--orange));
 }
 
+.footer-social-link {
+    color: rgba(255, 255, 255, 0.85);
+    text-decoration: none;
+    transition: var(--transition);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.footer-social-link:hover {
+    color: var(--white);
+    background: rgba(255, 255, 255, 0.18);
+    transform: translateY(-2px);
+}
+
 .footer h5 {
     color: var(--white);
     font-weight: 700;
