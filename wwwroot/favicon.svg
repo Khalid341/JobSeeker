@@ -6,8 +6,8 @@
     </linearGradient>
   </defs>
   <circle cx="50" cy="50" r="48" fill="url(#favGradient)"/>
-  <g font-family="Arial, sans-serif" font-weight="900" fill="#fff" text-anchor="middle" dominant-baseline="central">
-    <text x="36" y="52" font-size="44">L</text>
-    <text x="64" y="52" font-size="40">M</text>
+  <g fill="#ffffff">
+    <path d="M 25 27 L 34 27 L 34 65 L 47 65 L 47 73 L 25 73 Z"/>
+    <path d="M 55 73 L 55 27 L 65 27 L 72 47 L 79 27 L 89 27 L 89 73 L 80 73 L 80 41 L 75 58 L 69 58 L 64 41 L 64 73 Z"/>
   </g>
 </svg>
