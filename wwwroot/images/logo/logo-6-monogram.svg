@@ -10,5 +10,4 @@
     <text x="70" y="135" font-size="80">L</text>
     <text x="130" y="135" font-size="80">M</text>
   </g>
-  <circle cx="100" cy="55" r="6" fill="#5eead4"/>
 </svg>

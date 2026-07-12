@@ -1,46 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
   <defs>
     <linearGradient id="linkGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#14b8a6;stop-opacity:1" />
-      <stop offset="50%" style="stop-color:#0e7490;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#0c4a6e;stop-opacity:1" />
+      <stop offset="0%" style="stop-color:#14b8a6"/>
+      <stop offset="100%" style="stop-color:#0c4a6e"/>
     </linearGradient>
-    <linearGradient id="accentGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" style="stop-color:#5eead4;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#22d3ee;stop-opacity:1" />
-    </linearGradient>
-    <filter id="softShadow" x="-50%" y="-50%" width="200%" height="200%">
-      <feGaussianBlur in="SourceAlpha" stdDeviation="2"/>
-      <feOffset dx="0" dy="2" result="offsetblur"/>
-      <feComponentTransfer>
-        <feFuncA type="linear" slope="0.2"/>
-      </feComponentTransfer>
-      <feMerge>
-        <feMergeNode/>
-        <feMergeNode in="SourceGraphic"/>
-      </feMerge>
-    </filter>
   </defs>
-
-  <!-- Background circle with gradient -->
-  <circle cx="100" cy="100" r="92" fill="url(#linkGradient)" filter="url(#softShadow)"/>
-
-  <!-- Two interlocking chain links in white -->
-  <g transform="translate(100, 100)" fill="none" stroke="#ffffff" stroke-width="9" stroke-linecap="round">
-    <!-- Left link -->
-    <path d="M -42 -8 C -58 -8 -62 8 -50 18 C -38 28 -22 22 -18 12 L -8 2"/>
-    <!-- Right link -->
-    <path d="M 42 8 C 58 8 62 -8 50 -18 C 38 -28 22 -22 18 -12 L 8 -2"/>
+  <circle cx="100" cy="100" r="92" fill="url(#linkGradient)"/>
+  <g font-family="Arial, sans-serif" font-weight="900" fill="#fff" text-anchor="middle">
+    <text x="70" y="135" font-size="80">L</text>
+    <text x="130" y="135" font-size="80">M</text>
   </g>
-
-  <!-- Center connection highlight -->
-  <circle cx="100" cy="100" r="10" fill="url(#accentGradient)"/>
-  <circle cx="100" cy="100" r="5" fill="#ffffff"/>
-
-  <!-- Subtle accent dots representing connection points -->
-  <circle cx="58" cy="100" r="3" fill="url(#accentGradient)" opacity="0.7"/>
-  <circle cx="142" cy="100" r="3" fill="url(#accentGradient)" opacity="0.7"/>
-
-  <!-- Subtle shine on top -->
-  <ellipse cx="75" cy="55" rx="20" ry="8" fill="#ffffff" opacity="0.1"/>
 </svg>
