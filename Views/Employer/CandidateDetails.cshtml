@@ -84,37 +84,39 @@
                 <div class="card border-0 shadow-sm" style="background: linear-gradient(135deg, rgba(245, 247, 250, 0.8) 0%, rgba(226, 232, 240, 0.8) 100%);">
                     <div class="card-body p-4">
                         <h6 class="fw-bold mb-4">
-                            <i class="bi bi-envelope-fill me-2 text-primary"></i>معلومات التواصل
+                            <i class="bi bi-person-lines-fill me-2 text-primary"></i>معلومات التواصل
                         </h6>
-                        <ul class="list-unstyled mb-4">
-                            <li class="mb-3">
-                                <i class="bi bi-envelope-fill me-2 text-primary"></i>
-                                <span class="text-break">@Model.Email</span>
+                        <ul class="list-unstyled mb-4 contact-list">
+                            <li class="d-flex align-items-center mb-3">
+                                <i class="bi bi-envelope-fill text-primary ms-2" style="width: 20px;"></i>
+                                <a href="mailto:@Model.Email" class="text-break">@Model.Email</a>
                             </li>
                             @if (!string.IsNullOrEmpty(Model.PhoneNumber))
                             {
-                                <li class="mb-3">
-                                    <i class="bi bi-telephone-fill me-2 text-primary"></i>@Model.PhoneNumber
+                                <li class="d-flex align-items-center mb-3">
+                                    <i class="bi bi-telephone-fill text-primary ms-2" style="width: 20px;"></i>
+                                    <a href="tel:@Model.PhoneNumber" dir="ltr">@Model.PhoneNumber</a>
                                 </li>
                             }
                             @if (!string.IsNullOrEmpty(Model.City))
                             {
-                                <li class="mb-3">
-                                    <i class="bi bi-geo-alt-fill me-2 text-primary"></i>@Model.City
+                                <li class="d-flex align-items-center mb-3">
+                                    <i class="bi bi-geo-alt-fill text-primary ms-2" style="width: 20px;"></i>
+                                    <span>@Model.City</span>
                                 </li>
                             }
                             @if (!string.IsNullOrEmpty(Model.LinkedInUrl))
                             {
-                                <li class="mb-3">
-                                    <i class="bi bi-linkedin me-2 text-primary"></i>
-                                    <a href="@Model.LinkedInUrl" target="_blank" class="fw-semibold">LinkedIn</a>
+                                <li class="d-flex align-items-center mb-3">
+                                    <i class="bi bi-linkedin text-primary ms-2" style="width: 20px;"></i>
+                                    <a href="@Model.LinkedInUrl" target="_blank" rel="noopener" class="text-truncate">LinkedIn</a>
                                 </li>
                             }
                             @if (!string.IsNullOrEmpty(Model.GitHubUrl))
                             {
-                                <li class="mb-3">
-                                    <i class="bi bi-github me-2 text-primary"></i>
-                                    <a href="@Model.GitHubUrl" target="_blank" class="fw-semibold">GitHub</a>
+                                <li class="d-flex align-items-center mb-3">
+                                    <i class="bi bi-github text-primary ms-2" style="width: 20px;"></i>
+                                    <a href="@Model.GitHubUrl" target="_blank" rel="noopener" class="text-truncate">GitHub</a>
                                 </li>
                             }
                         </ul>
