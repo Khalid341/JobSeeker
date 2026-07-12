@@ -5,15 +5,22 @@
       <stop offset="50%" style="stop-color:#0e7490;stop-opacity:1" />
       <stop offset="100%" style="stop-color:#0c4a6e;stop-opacity:1" />
     </linearGradient>
+    <linearGradient id="favAccent" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#5eead4;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#22d3ee;stop-opacity:1" />
+    </linearGradient>
   </defs>
 
   <!-- Background -->
   <circle cx="50" cy="50" r="48" fill="url(#favGradient)"/>
 
-  <!-- Link icon -->
-  <g transform="translate(50, 50)" fill="none" stroke="#ffffff" stroke-width="7" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M -22 -5 C -30 -5 -32 3 -27 8 C -22 13 -14 10 -12 5 L -8 0" />
-    <path d="M 22 5 C 30 5 32 -3 27 -8 C 22 -13 14 -10 12 -5 L 8 0" />
-    <circle cx="0" cy="0" r="5" fill="#ffffff" stroke="none"/>
+  <!-- Two interlocking links -->
+  <g transform="translate(50, 50)" fill="none" stroke="#ffffff" stroke-width="7" stroke-linecap="round">
+    <path d="M -22 -5 C -30 -5 -32 5 -26 11 C -20 17 -10 12 -8 6 L -4 2"/>
+    <path d="M 22 5 C 30 5 32 -5 26 -11 C 20 -17 10 -12 8 -6 L 4 -2"/>
   </g>
+
+  <!-- Center -->
+  <circle cx="50" cy="50" r="5" fill="url(#favAccent)"/>
+  <circle cx="50" cy="50" r="2.5" fill="#ffffff"/>
 </svg>

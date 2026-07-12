@@ -5,15 +5,15 @@
       <stop offset="50%" style="stop-color:#0e7490;stop-opacity:1" />
       <stop offset="100%" style="stop-color:#0c4a6e;stop-opacity:1" />
     </linearGradient>
-    <linearGradient id="accentLink" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" style="stop-color:#14b8a6;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#0891b2;stop-opacity:1" />
+    <linearGradient id="accentGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#5eead4;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#22d3ee;stop-opacity:1" />
     </linearGradient>
     <filter id="softShadow" x="-50%" y="-50%" width="200%" height="200%">
       <feGaussianBlur in="SourceAlpha" stdDeviation="2"/>
       <feOffset dx="0" dy="2" result="offsetblur"/>
       <feComponentTransfer>
-        <feFuncA type="linear" slope="0.15"/>
+        <feFuncA type="linear" slope="0.2"/>
       </feComponentTransfer>
       <feMerge>
         <feMergeNode/>
@@ -22,35 +22,25 @@
     </filter>
   </defs>
 
-  <!-- Background circle -->
-  <circle cx="100" cy="100" r="90" fill="url(#linkGradient)" filter="url(#softShadow)"/>
+  <!-- Background circle with gradient -->
+  <circle cx="100" cy="100" r="92" fill="url(#linkGradient)" filter="url(#softShadow)"/>
 
-  <!-- Link/connection icon in white -->
-  <g transform="translate(100, 100)" fill="none" stroke="#ffffff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
-    <!-- Left chain link -->
-    <path d="M -45 -10 C -60 -10 -65 5 -55 15 C -45 25 -30 20 -25 10 L -15 0"
-          stroke-width="7"/>
-    <!-- Right chain link -->
-    <path d="M 45 10 C 60 10 65 -5 55 -15 C 45 -25 30 -20 25 -10 L 15 0"
-          stroke-width="7"/>
-    <!-- Connection highlight -->
-    <circle cx="0" cy="0" r="8" fill="#ffffff" stroke="none"/>
+  <!-- Two interlocking chain links in white -->
+  <g transform="translate(100, 100)" fill="none" stroke="#ffffff" stroke-width="9" stroke-linecap="round">
+    <!-- Left link -->
+    <path d="M -42 -8 C -58 -8 -62 8 -50 18 C -38 28 -22 22 -18 12 L -8 2"/>
+    <!-- Right link -->
+    <path d="M 42 8 C 58 8 62 -8 50 -18 C 38 -28 22 -22 18 -12 L 8 -2"/>
   </g>
 
-  <!-- Two abstract people silhouette -->
-  <g transform="translate(100, 100)" filter="url(#softShadow)">
-    <!-- Left person -->
-    <g transform="translate(-35, 5)">
-      <circle cx="0" cy="-28" r="11" fill="#ffffff" opacity="0.95"/>
-      <path d="M 0 -17 Q -14 -8 -16 6 Q -18 20 -8 32" stroke="#ffffff" stroke-width="5" fill="none" stroke-linecap="round"/>
-    </g>
-    <!-- Right person -->
-    <g transform="translate(35, 5)">
-      <circle cx="0" cy="-28" r="11" fill="#ffffff" opacity="0.95"/>
-      <path d="M 0 -17 Q 14 -8 16 6 Q 18 20 8 32" stroke="#ffffff" stroke-width="5" fill="none" stroke-linecap="round"/>
-    </g>
-  </g>
+  <!-- Center connection highlight -->
+  <circle cx="100" cy="100" r="10" fill="url(#accentGradient)"/>
+  <circle cx="100" cy="100" r="5" fill="#ffffff"/>
 
-  <!-- Subtle shine -->
-  <circle cx="70" cy="60" r="12" fill="#ffffff" opacity="0.1"/>
+  <!-- Subtle accent dots representing connection points -->
+  <circle cx="58" cy="100" r="3" fill="url(#accentGradient)" opacity="0.7"/>
+  <circle cx="142" cy="100" r="3" fill="url(#accentGradient)" opacity="0.7"/>
+
+  <!-- Subtle shine on top -->
+  <ellipse cx="75" cy="55" rx="20" ry="8" fill="#ffffff" opacity="0.1"/>
 </svg>
