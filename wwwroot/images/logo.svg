@@ -6,8 +6,8 @@
     </linearGradient>
   </defs>
   <circle cx="100" cy="100" r="92" fill="url(#linkGradient)"/>
-  <g font-family="Arial, sans-serif" font-weight="900" fill="#fff" text-anchor="middle">
-    <text x="70" y="135" font-size="80">L</text>
-    <text x="130" y="135" font-size="80">M</text>
+  <g font-family="Arial, sans-serif" font-weight="900" fill="#fff" text-anchor="middle" dominant-baseline="central">
+    <text x="72" y="105" font-size="88">L</text>
+    <text x="128" y="105" font-size="80">M</text>
   </g>
 </svg>
